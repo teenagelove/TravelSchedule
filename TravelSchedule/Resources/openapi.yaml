@@ -1,0 +1,1090 @@
+#
+#  openapi.yaml
+#  TravelSchedule
+#
+#  Created by Danil Kazakov on 31.05.2025.
+#
+
+openapi: 3.0.3
+info:
+  title: API.Rasp.Yandex.Net
+  description: API Яндекс.Расписаний
+  version: 3.0.0
+servers:
+- url: https://api.rasp.yandex.net
+tags:
+- name: API.Rasp.Yandex.Net 3.0.0 OAS 3.0
+  description: Запросы по API Яндекс Расписаний
+paths:
+  /v3.0/nearest_settlement/:
+    get:
+      tags:
+      - getNearestSettlement
+      summary: Информация о ближайшем к указанной точке городе
+      operationId: getNearestSettlement
+      parameters:
+      - name: apikey
+        in: query
+        description: API key
+        required: true
+        schema:
+          type: string
+      - name: lat
+        in: query
+        description: широта
+        required: true
+        schema:
+          type: number
+      - name: lng
+        in: query
+        description: долгота
+        required: true
+        schema:
+          type: number
+      - name: distance
+        in: query
+        description: радиус охвата
+        required: false
+        schema:
+          type: number
+      - name: lang
+        in: query
+        description: lang
+        required: false
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: json или xml
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settlement'
+        "400":
+          description: Неверный запрос
+        "401":
+          description: Не авторизован
+        "404":
+          description: Страница не найдена
+        "500":
+          description: Ошибка сервера
+  /v3.0/carrier/:
+    get:
+      tags:
+      - getCarrierByCode
+      summary: Информация о перевозчике по коду перевозчика
+      operationId: getCarrierByCode
+      parameters:
+      - name: apikey
+        in: query
+        description: API key
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        description: Код перевозчика (в системе Яндекс Расписаний или system для других систем)
+        required: true
+        schema:
+          type: integer
+      - name: system
+        in: query
+        description: Система кодирования, обязателен, если не система Яндекс Расписаний
+        required: false
+        schema:
+          type: string
+      - name: lang
+        in: query
+        description: Язык возвращаемой информации
+        required: false
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: json или xml
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarrierArray'
+        "400":
+          description: Неверный запрос
+        "401":
+          description: Не авторизован
+        "404":
+          description: Страница не найдена
+        "500":
+          description: Ошибка сервера
+  /v3.0/schedule/:
+    get:
+      tags:
+      - getScheduleByStation
+      summary: Расписание рейсов по станции
+      operationId: getScheduleByStation
+      parameters:
+      - name: apikey
+        in: query
+        description: API key
+        required: true
+        schema:
+          type: string
+      - name: station
+        in: query
+        description: Код станции
+        required: true
+        schema:
+          type: string
+      - name: lang
+        in: query
+        description: Язык возвращаемой информации
+        required: false
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: json или xml
+        required: false
+        schema:
+          type: string
+      - name: date
+        in: query
+        description: Дата, на которую необходимо получить список рейсов
+        required: false
+        schema:
+          type: string
+      - name: transport_types
+        in: query
+        description: Тип транспортного средства - plane, train, suburban, bus, water, helicopter
+        required: false
+        schema:
+          type: string
+      - name: direction
+        in: query
+        description: Код направления
+        required: false
+        schema:
+          type: string
+      - name: event
+        in: query
+        description: Событие, departure или arrival
+        required: false
+        schema:
+          type: string
+      - name: system
+        in: query
+        description: Событие, departure или arrival
+        required: false
+        schema:
+          type: string
+      - name: show_systems
+        in: query
+        description: yandex или esr
+        required: false
+        schema:
+          type: string
+      - name: result_timezone
+        in: query
+        description: Часовой пояс
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        "400":
+          description: Неверный запрос
+        "401":
+          description: Не авторизован
+        "404":
+          description: Страница не найдена
+        "500":
+          description: Ошибка сервера
+  /v3.0/search/:
+    get:
+      tags:
+      - getScheduleBetweenStations
+      summary: Расписание рейсов между станциями
+      operationId: getScheduleBetweenStations
+      parameters:
+      - name: apikey
+        in: query
+        description: API key
+        required: true
+        schema:
+          type: string
+      - name: from
+        in: query
+        description: Код станции отправления
+        required: true
+        schema:
+          type: string
+      - name: to
+        in: query
+        description: Код станции прибытия
+        required: true
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: json или xml
+        required: false
+        schema:
+          type: string
+      - name: date
+        in: query
+        description: Дата, на которую необходимо получить список рейсов
+        required: false
+        schema:
+          type: string
+      - name: transport_types
+        in: query
+        description: Тип транспортного средства - plane, train, suburban, bus, water, helicopter
+        required: false
+        schema:
+          type: string
+      - name: system
+        in: query
+        description: Система кодирования, в которой указывается код станции отправления и код станции прибытия
+        required: false
+        schema:
+          type: string
+      - name: show_systems
+        in: query
+        description: yandex или esr
+        required: false
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Смещение относительно первого результата поиска, 0 по умолчанию
+        required: false
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Максимальное количество результатов в ответе, 100 по умолчанию
+        required: false
+        schema:
+          type: integer
+      - name: add_days_mask
+        in: query
+        description: Часовой пояс
+        required: false
+        schema:
+          type: string
+      - name: result_timezone
+        in: query
+        description: Часовой пояс
+        required: false
+        schema:
+          type: string
+      - name: transfers
+        in: query
+        description: Признак для поиска маршрутов с пересадками
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Search'
+        "400":
+          description: Неверный запрос
+        "401":
+          description: Не авторизован
+        "404":
+          description: Страница не найдена
+        "500":
+          description: Ошибка сервера
+  /v3.0/thread/:
+    get:
+      tags:
+      - getStationOnRoute
+      summary: список станций следования
+      operationId: getStationOnRoute
+      parameters:
+        - name: apikey
+          in: query
+          description: API key
+          required: true
+          schema:
+            type: string
+        - name: uid
+          in: query
+          description: Идентификатор нитки в Яндекс Расписаниях
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationsOnRoute'
+        "400":
+          description: Неверный запрос
+        "401":
+          description: Не авторизован
+        "404":
+          description: Страница не найдена
+        "500":
+          description: Ошибка сервера
+  /v3.0/copyright/:
+    get:
+      tags:
+      - getCopyright
+      summary: данные о Яндекс Расписаниях - URL сервиса, баннер в различных цветовых представлениях и уведомительный текст
+      operationId: getCopyright
+      parameters:
+      - name: apikey
+        in: query
+        description: API key
+        required: true
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: json или xml
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Copyright'
+        "400":
+          description: Неверный запрос
+        "401":
+          description: Не авторизован
+        "404":
+          description: Страница не найдена
+        "500":
+          description: Ошибка сервера
+  /v3.0/stations_list/:
+    get:
+      tags:
+      - getAllStations
+      summary: Полный список станций Яндекс Расписания
+      operationId: getAllStations
+      parameters:
+      - name: apikey
+        in: query
+        description: API key
+        required: true
+        schema:
+          type: string
+      - name: format
+        in: query
+        description: json или xml
+        required: false
+        schema:
+          type: string
+      - name: lang
+        in: query
+        description: lang
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: success
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/AllStations'
+        "400":
+          description: Неверный запрос
+        "401":
+          description: Не авторизован
+        "404":
+          description: Страница не найдена
+        "500":
+          description: Ошибка сервера
+  /v3.0/nearest_stations/:
+    get:
+      tags:
+      - getNearestStations
+      summary: Список ближайших станций
+      operationId: getNearestStations
+      parameters:
+      - name: apikey
+        in: query
+        description: API key
+        required: true
+        schema:
+          type: string
+      - name: lat
+        in: query
+        description: широта
+        required: true
+        schema:
+          type: number
+      - name: lng
+        in: query
+        description: долгота
+        required: true
+        schema:
+          type: number
+      - name: distance
+        in: query
+        description: радиус охвата
+        required: true
+        schema:
+          type: integer
+      - name: format
+        in: query
+        description: json или xml
+        required: false
+        schema:
+          type: string
+      - name: lang
+        in: query
+        description: lang
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stations'
+        "400":
+          description: Неверный запрос
+        "401":
+          description: Не авторизован
+        "404":
+          description: Страница не найдена
+        "500":
+          description: Ошибка сервера
+components:
+  schemas:
+    StationsOnRoute:
+      type: object
+      properties:
+        except_days:
+          type: string
+        arrival_date:
+          type: string
+        from:
+          type: string
+        uid:
+          type: string
+        title:
+          type: string
+        interval:
+          type: object
+          $ref: '#/components/schemas/Interval'
+        departure_date:
+          type: string
+        start_time:
+          type: string
+        number:
+          type: string
+        short_title:
+          type: string
+        days:
+          type: string
+        to:
+          type: string
+        carrier:
+          $ref: '#/components/schemas/Carrier'
+        transport_type:
+          type: string
+        stops:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stops'
+        vehicle:
+          type: string
+        start_date:
+          type: string
+        transport_subtype:
+          $ref: '#/components/schemas/TransportSubtype'
+        express_type:
+          type: string
+    Stops:
+      type: object
+      properties:
+        arrival:
+          type: string
+        departure:
+          type: string
+        duration:
+          type: number
+        stop_time:
+          type: number
+        station:
+          $ref: '#/components/schemas/Station'
+        terminal:
+          type: string
+        platform:
+          type: string
+    Interval:
+      type: object
+      properties:
+        density:
+          type: string
+          description: Описание периодичности движения в свободной форме
+        begin_time:
+          type: string
+          description: Дата и время начала движения по нитке. Всегда указывается в часовом поясе станции отправления.
+        end_time:
+          type: string
+          description: Дата и время окончания движения по нитке. Всегда указывается в часовом поясе станции отправления.
+    Station:
+      type: object
+      properties:
+        codes:
+          $ref: '#/components/schemas/StationCode'
+        code:
+          type: string
+          description: Код станции в системе кодирования Яндекс Расписаний
+        title:
+          type: string
+        station_type:
+          type: string
+        type:
+          type: string
+        station_type_name:
+          type: string
+        popular_title:
+          type: string
+        short_title:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        transport_type:
+          type: string
+        distance:
+          type: number
+        majority:
+          type: integer
+        type_choices:
+          $ref: '#/components/schemas/TypeChoices'
+    Stations:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        stations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Station'
+    AllStations:
+      type: object
+      properties:
+        countries:
+          type: array
+          description: Список стран
+          items:
+            $ref: '#/components/schemas/Country'
+    Country:
+      type: object
+      properties:
+        regions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Region'
+        codes:
+          $ref: '#/components/schemas/GeoCode'
+        title:
+          type: string
+    Region:
+      type: object
+      properties:
+        settlements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SettlementInfo'
+        codes:
+          $ref: '#/components/schemas/GeoCode'
+        title:
+          type: string
+    SettlementInfo:
+      type: object
+      properties:
+        stations:
+          type: array
+          items:
+            $ref: '#/components/schemas/StationInfo'
+        codes:
+          $ref: '#/components/schemas/GeoCode'
+        title:
+          type: string
+    GeoCode:
+      type: object
+      properties:
+        yandex_code:
+          type: string
+          description: Коды страны/региона/населенного пункта в системе кодирования Яндекс Расписаний
+    StationCode:
+      type: object
+      properties:
+        express:
+          type: string
+          description: Код станции в системе кодирования Экспресс-3
+        yandex:
+          type: string
+          description: Код станции в системе кодирования Яндекс Расписаний
+        yandex_code:
+          type: string
+          description: Код станции в системе кодирования Яндекс Расписаний
+        esr:
+          type: string
+          description: Код станции в системе кодирования ЕСР
+        esr_code:
+          type: string
+          description: Код станции в системе кодирования ЕСР
+    StationInfo:
+      type: object
+      properties:
+        type:
+          type: string
+        direction:
+          type: string
+          description: Направление движения поездов, на котором находится станция
+        codes:
+          $ref: '#/components/schemas/StationCode'
+        latitude:
+          oneOf:
+          - type: string
+          - type: number
+          description: широта станции
+        longitude:
+          oneOf:
+          - type: string
+          - type: number
+          description: долгота станции
+        station_type:
+          type: string
+        title:
+          type: string
+        transport_type:
+          type: string
+    Copyright:
+      type: object
+      properties:
+        copyright:
+          type: object
+          properties:
+            text:
+              type: string
+              description: Уведомительный текст
+            url:
+              type: string
+              format: uri
+              description: URL Яндекс Расписаний
+            logo_vm:
+              type: string
+              description: Вертикальный монохромный баннер
+            logo_vd:
+              type: string
+              description: Вертикальный черно-белый баннер
+            logo_hy:
+              type: string
+              description: Горизонтальный цветной баннер
+            logo_hd:
+              type: string
+              description: Горизонтальный черно-белый баннер
+            logo_vy:
+              type: string
+              description: Вертикальный цветной баннер
+            logo_hm:
+              type: string
+              description: Горизонтальный монохромный баннер
+    Schedule:
+      type: object
+      properties:
+        date:
+          type: string
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        station:
+          $ref: '#/components/schemas/Station'
+        schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduleByStation'
+        interval_schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/IntervalSchedule'
+        schedule_direction:
+          $ref: '#/components/schemas/ScheduleDirection'
+        direction:
+          $ref: '#/components/schemas/Directions'
+    ScheduleByStation:
+      type: object
+      properties:
+        except_days:
+          type: string
+          description: Дни, в которые нитка не курсирует
+        arrival:
+          type: string
+          description: Время прибытия, в формате ISO 8601
+        thread:
+          description: Информация о нитке.
+          $ref: '#/components/schemas/Thread'
+        is_fuzzy:
+          type: boolean
+          description: Признак неточности времени отправления и времени прибытия
+        days:
+          type: string
+          description: Дни курсирования нитки.
+        stops:
+          type: string
+          description: Станции следования рейса, на которых совершается остановка
+        departure:
+          type: string
+          description: Время отправления, в формате ISO 8601
+        terminal:
+          type: string
+          description: Терминал аэропорта (например, «D»)
+        platform:
+          type: string
+          description: Платформа или путь, с которого отправляется рейс (например, «3 путь»)
+    IntervalSchedule:
+      type: object
+      properties:
+        except_days:
+          type: string
+          description: Дни, в которые нитка не курсирует
+        thread:
+          description: Информация о нитке.
+          $ref: '#/components/schemas/Thread'
+    ScheduleDirection:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Код направления
+        title:
+          type: string
+          description: Название направления
+    Search:
+      type: object
+      properties:
+        search:
+          type: object
+          properties:
+            from:
+              $ref: '#/components/schemas/From'
+            to:
+              $ref: '#/components/schemas/To'
+            date:
+              $ref: '#/components/schemas/Date'
+        segments:
+          type: array
+          items:
+              $ref: '#/components/schemas/Segment'
+        interval_segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/IntervalSegment'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    TicketInfo:
+      type: object
+      properties:
+        et_marker:
+          type: boolean
+        places:
+          type: array
+          items:
+            $ref: '#/components/schemas/Place'
+    Place:
+      type: object
+      properties:
+        currency:
+          type: string
+        price:
+          $ref: '#/components/schemas/Price'
+        name:
+          type: string
+    Price:
+      type: object
+      properties:
+        cents:
+          type: number
+        whole:
+          type: number
+    Segment:
+      type: object
+      properties:
+        arrival:
+          type: string
+        tickets_info:
+          $ref: '#/components/schemas/TicketInfo'
+        duration:
+          type: number
+        arrival_terminal:
+          type: string
+        arrival_platform:
+          type: string
+        from:
+          $ref: '#/components/schemas/From'
+        thread:
+          $ref: '#/components/schemas/Thread'
+        departure_platform:
+          type: string
+        departure:
+          type: string
+        stops:
+          type: string
+        start_date:
+          type: string
+        to:
+          $ref: '#/components/schemas/To'
+        has_transfers:
+          type: boolean
+        departure_terminal:
+          type: string
+    IntervalSegment:
+      type: object
+      properties:
+        tickets_info:
+          $ref: '#/components/schemas/TicketInfo'
+        duration:
+          type: number
+        arrival_terminal:
+          type: string
+        arrival_platform:
+          type: string
+        from:
+          $ref: '#/components/schemas/From'
+        thread:
+          $ref: '#/components/schemas/Thread'
+        departure_platform:
+          type: string
+        stops:
+          type: string
+        start_date:
+          type: string
+        to:
+          $ref: '#/components/schemas/To'
+        has_transfers:
+          type: boolean
+        departure_terminal:
+          type: string
+    Date:
+      type: string
+    CarrierArray:
+      type: object
+      description: Список перевозчиков. Включен в ответ, если код указан в системе IATA
+      properties:
+        carrier:
+          $ref: '#/components/schemas/Carrier'
+    Carrier:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Код перевозчика в указанной системе кодирования (по умолчанию — в системе Яндекс Расписаний)
+        title:
+          type: string
+          description: Название перевозчика
+        codes:
+          type: object
+          properties:
+            icao:
+              type: string
+              description: Код перевозчика в системе кодирования ICAO
+            sirena:
+              type: string
+              description: Код перевозчика в системе кодирования Sirena
+            iata:
+              type: string
+              description: Код перевозчика в системе кодирования IATA
+        address:
+          type: string
+          description: Юридический адрес перевозчика
+        url:
+          type: string
+          description: Ссылка на сайт перевозчика
+        email:
+          type: string
+          description: Электронный почтовый адрес перевозчика
+        contacts:
+          type: string
+          description: Контактная информация, в свободной форме
+        phone:
+          type: string
+          description: Контактный номер телефона перевозчика
+        logo_svg:
+          type: string
+          description: Ссылка на используемый Яндексом логотип перевозчика в формате SVG
+        logo:
+          type: string
+          description: Ссылка на используемый Яндексом логотип перевозчика в растровом формате
+    Directions:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Код направления
+        title:
+          type: string
+          description: Название направления (расшифровка кода)
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+    To:
+      type: object
+      properties:
+        title:
+          type: string
+        popular_title:
+          type: string
+        short_title:
+          type: string
+        code:
+          type: string
+        type:
+          type: string
+        station_type:
+          type: string
+        station_type_name:
+          type: string
+        transport_type:
+          type: string
+        type_choices:
+          $ref: '#/components/schemas/Schedule'
+    From:
+      type: object
+      properties:
+        title:
+          type: string
+        popular_title:
+          type: string
+        short_title:
+          type: string
+        code:
+          type: string
+        type:
+          type: string
+        station_type:
+          type: string
+        station_type_name:
+          type: string
+        transport_type:
+          type: string
+        type_choices:
+          $ref: '#/components/schemas/Schedule'
+    Settlement:
+      type: object
+      properties:
+        distance:
+          type: number
+          description: Расстояние до найденного города, в километрах
+        code:
+          type: string
+          description: Код города в системе кодирования Яндекс Расписаний
+        title:
+          type: string
+          description: Название города
+        popular_title:
+          type: string
+          description: Общепринятое название города
+        short_title:
+          type: string
+          description: Краткое название города
+        lat:
+          type: number
+        lng:
+          type: number
+        type:
+          type: string
+          description: station или settlement
+    TypeChoices:
+      type: object
+      properties:
+        schedule:
+          type: object
+          properties:
+            desktop_url:
+              type: string
+              format: uri
+            touch_url:
+              type: string
+              format: uri
+    TransportSubtype:
+      type: object
+      description: Информация о подтипе транспортного средства
+      properties:
+        color:
+          type: string
+          description: Основной цвет транспортного средства в шестнадцатеричном формате
+        code:
+          type: string
+          description: Код подтипа транспорта для типа, указанного в элементе transport_type
+        title:
+          type: string
+          description: Описание подтипа транспорта на естественном языке
+    Thread:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Номер рейса
+        title:
+          type: string
+          description: Название нитки
+        short_title:
+          type: string
+          description: Короткое название нитки
+        express_type:
+          type: string
+          description: Признак экспресса или аэроэкспресса
+        transport_type:
+          type: string
+          description: Тип транспортного средства
+        carrier:
+          description: Информация о перевозчике
+          $ref: '#/components/schemas/Carrier'
+        uid:
+          type: string
+          description: Идентификатор нитки в Яндекс Расписаниях
+        vehicle:
+          type: string
+          description: Название транспортного средства
+        transport_subtype:
+          description: Информация о подтипе транспортного средства
+          $ref: '#/components/schemas/TransportSubtype'
+        interval:
+          $ref: '#/components/schemas/Interval'
+          description: Информация о движении по интервальной нитке
+        thread_method_link:
+          type: string
+          description: URL запроса информации о нитке с идентификатором, указанным в ключе uid

@@ -16,6 +16,16 @@ struct ContentView: View {
             Text("Hello, world!")
         }
         .padding()
+        .onAppear {
+            guard let client = APIClientFactory.makeClient()
+            else { return }
+            
+            let apiKey = "c5b1e7dd-f0cd-4ce6-99e5-7eb487ac23f1"
+            
+            NearestStationsService.testFetchStations(client: client, apiKey: apiKey)
+            AllStationsService.testAllStations(client: client, apiKey: apiKey)
+            CopyrightService.testGetCopyright(client: client, apiKey: apiKey)
+        }
     }
 }
 
