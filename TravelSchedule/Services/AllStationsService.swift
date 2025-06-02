@@ -43,8 +43,9 @@ final class AllStationsService {
             do {
                 print("Fetching stations...")
                 let allStations = try await service.getAllStations()
+//                Здесь может повиснуть окно дебага
 //                print("Successfully fetched all stations: \(allStations)")
-                print("Successfully fetched all stations: ")
+                print("Successfully fetched all stations!")
             } catch {
                 print("Error fetching stations: \(error.localizedDescription)")
             }

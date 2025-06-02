@@ -25,12 +25,11 @@ final class NearestStationsService: NearestStationsServiceProtocol {
     
     func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations {
         let response = try await client.getNearestStations(query: .init(
-                apikey: apiKey,
-                lat: lat,
-                lng: lng,
-                distance: distance
-            )
-        )
+            apikey: apiKey,
+            lat: lat,
+            lng: lng,
+            distance: distance
+        ))
         
         return try response.ok.body.json
     }
@@ -48,8 +47,8 @@ final class NearestStationsService: NearestStationsServiceProtocol {
                     distance: 50
                 )
                 
-//                print("Successfully fetched stations: \(stations)")
-                print("Successfully fetched stations:")
+                print("Successfully fetched stations: \(stations)")
+//                print("Successfully fetched stations!")
             } catch {
                 print("Error fetching stations: \(error.localizedDescription)")
             }

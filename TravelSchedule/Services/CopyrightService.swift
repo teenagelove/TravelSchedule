@@ -35,8 +35,7 @@ final class CopyrightService: CopyrightServiceProtocol {
             do {
                 print("Fetching copyright...")
                 let copyright = try await service.getCopyright()
-//                print("Successfully fetched copyright: \(copyright)")
-                print("Successfully fetched copyright: ")
+                print("Successfully fetched copyright: \(copyright)")
             } catch {
                 print("Error fetching copyright: \(error.localizedDescription)")
             }

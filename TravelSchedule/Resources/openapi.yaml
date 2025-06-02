@@ -77,9 +77,9 @@ paths:
   /v3.0/carrier/:
     get:
       tags:
-      - getCarrierByCode
+      - getCarriersByCode
       summary: Информация о перевозчике по коду перевозчика
-      operationId: getCarrierByCode
+      operationId: getCarriersByCode
       parameters:
       - name: apikey
         in: query
@@ -117,7 +117,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CarrierArray'
+                $ref: '#/components/schemas/Carriers'
         "400":
           description: Неверный запрос
         "401":
@@ -205,7 +205,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Schedule'
+                $ref: '#/components/schemas/ScheduleByStation'
         "400":
           description: Неверный запрос
         "401":
@@ -305,7 +305,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Search'
+                $ref: '#/components/schemas/SearchedScheduleBetweenStations'
         "400":
           description: Неверный запрос
         "401":
@@ -317,9 +317,9 @@ paths:
   /v3.0/thread/:
     get:
       tags:
-      - getStationOnRoute
+      - getStationsOnRoute
       summary: список станций следования
-      operationId: getStationOnRoute
+      operationId: getStationsOnRoute
       parameters:
         - name: apikey
           in: query
@@ -718,7 +718,7 @@ components:
             logo_hm:
               type: string
               description: Горизонтальный монохромный баннер
-    Schedule:
+    ScheduleByStation:
       type: object
       properties:
         date:
@@ -730,7 +730,7 @@ components:
         schedule:
           type: array
           items:
-            $ref: '#/components/schemas/ScheduleByStation'
+            $ref: '#/components/schemas/Schedule'
         interval_schedule:
           type: array
           items:
@@ -739,7 +739,7 @@ components:
           $ref: '#/components/schemas/ScheduleDirection'
         direction:
           $ref: '#/components/schemas/Directions'
-    ScheduleByStation:
+    Schedule:
       type: object
       properties:
         except_days:
@@ -787,7 +787,7 @@ components:
         title:
           type: string
           description: Название направления
-    Search:
+    SearchedScheduleBetweenStations:
       type: object
       properties:
         search:
@@ -894,7 +894,7 @@ components:
           type: string
     Date:
       type: string
-    CarrierArray:
+    Carriers:
       type: object
       description: Список перевозчиков. Включен в ответ, если код указан в системе IATA
       properties:

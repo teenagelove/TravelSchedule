@@ -22,9 +22,16 @@ struct ContentView: View {
             
             let apiKey = "c5b1e7dd-f0cd-4ce6-99e5-7eb487ac23f1"
             
-            NearestStationsService.testFetchStations(client: client, apiKey: apiKey)
-            AllStationsService.testAllStations(client: client, apiKey: apiKey)
-            CopyrightService.testGetCopyright(client: client, apiKey: apiKey)
+            // Раскомментировать нужные тесты для запуска
+            // Лучше запускать тесты по очереди, чтобы не загромождать консоль выводом
+            
+//            NearestStationsService.testFetchStations(client: client, apiKey: apiKey)
+//            AllStationsService.testAllStations(client: client, apiKey: apiKey)
+//            CopyrightService.testGetCopyright(client: client, apiKey: apiKey)
+//            StationsOnRouteService.testGetStationOnRoute(client: client, apiKey: apiKey)
+//            ScheduleByStationService.testGetScheduleByStation(client: client,apiKey: apiKey)
+//            NearestSettlementService.testGetNearestSettlement(client: client, apiKey: apiKey)
+//            ScheduleBetweenStationsService.testGetScheduleBetweenStations(client: client, apiKey: apiKey)
         }
     }
 }
