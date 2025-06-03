@@ -32,6 +32,7 @@ struct ContentView: View {
 //            ScheduleByStationService.testGetScheduleByStation(client: client,apiKey: apiKey)
 //            NearestSettlementService.testGetNearestSettlement(client: client, apiKey: apiKey)
 //            ScheduleBetweenStationsService.testGetScheduleBetweenStations(client: client, apiKey: apiKey)
+//            CarrierService.testGetCarrierByCode(client: client, apiKey: apiKey)
         }
     }
 }
