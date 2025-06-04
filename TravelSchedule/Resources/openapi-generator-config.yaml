@@ -1,0 +1,10 @@
+# openapi-generator-config.yaml
+# TravelSchedule
+#
+# Created by Danil Kazakov on 31.05.2025
+# This configuration file defines what Swift code to generate
+# from the OpenAPI specification.
+
+generate:
+  - types
+  - client
