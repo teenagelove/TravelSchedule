@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  TravelSchedule
 //
 //  Created by Danil Kazakov on 29.05.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct TripSelectorView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -38,5 +38,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    TripSelectorView()
 }
