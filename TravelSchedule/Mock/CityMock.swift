@@ -9,7 +9,7 @@ enum CityMock {
     static let cities: [City] = [
         City(
             name: "Москва",
-            station: [
+            stations: [
                 Station(name: "Белорусский вокзал"),
                 Station(name: "Киевский вокзал"),
                 Station(name: "Курский вокзал"),
@@ -21,7 +21,7 @@ enum CityMock {
         ),
         City(
             name: "Санкт-Петербург",
-            station: [
+            stations: [
                 Station(name: "Балтийский вокзал"),
                 Station(name: "Ладожский вокзал"),
                 Station(name: "Московский вокзал"),
@@ -31,7 +31,7 @@ enum CityMock {
         ),
         City(
             name: "Сочи",
-            station: [
+            stations: [
                 Station(name: "Сочи вокзал"),
                 Station(name: "Адлер"),
                 Station(name: "Дагомыс"),
@@ -42,7 +42,7 @@ enum CityMock {
         ),
         City(
             name: "Горный воздух",
-            station: [
+            stations: [
                 Station(name: "Городской ж/д вокзал"),
                 Station(name: "Горячий Ключ"),
                 Station(name: "Динская"),
@@ -52,7 +52,7 @@ enum CityMock {
         ),
         City(
             name: "Краснодар",
-            station: [
+            stations: [
                 Station(name: "Краснодар‑1"),
                 Station(name: "Краснодар‑2"),
                 Station(name: "Пашковская"),
@@ -63,7 +63,7 @@ enum CityMock {
         ),
         City(
             name: "Казань",
-            station: [
+            stations: [
                 Station(name: "Казань-Пассажирская"),
                 Station(name: "Казань‑1"),
                 Station(name: "Казань‑2"),
@@ -73,7 +73,7 @@ enum CityMock {
         ),
         City(
             name: "Омск",
-            station: [
+            stations: [
                 Station(name: "Омск‑Пассажирский"),
                 Station(name: "Комбинатская"),
                 Station(name: "Московка"),

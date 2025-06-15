@@ -7,30 +7,44 @@
 
 import SwiftUI
 
+enum LocationRoute: Hashable {
+    case origin
+    case destination
+}
+
 struct TripSelectorView: View {
-    @State private var selection: String?
+    @State private var viewModel: ViewModel = ViewModel()
+    @State private var path: [LocationRoute] = []
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             VStack {
                 ZStack {
                     Color.blue
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                     HStack(spacing: 16) {
                         VStack(alignment: .leading) {
-                            NavigationLink(destination: CityPickerView()) {
-                                Text("Откуда")
+                            Button {
+                                path.append(.origin)
+                            } label: {
+                                Text(viewModel.originName)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundStyle(.gray)
+                                    .foregroundStyle(
+                                        !viewModel.isOriginSelected ? .gray : .primary
+                                    )
                                     .font(.regular17)
                             }
                             
                             Spacer()
                             
-                            NavigationLink(destination: CityPickerView()) {
-                                Text("Куда")
+                            Button {
+                                path.append(.destination)
+                            } label: {
+                                Text(viewModel.destinationName)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundStyle(.gray)
+                                    .foregroundStyle(
+                                        !viewModel.isDestinationSelected ? .gray : .primary
+                                    )
                                     .font(.regular17)
                             }
                         }
@@ -40,7 +54,7 @@ struct TripSelectorView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                         
                         Button {
-                            // Action for button tap
+                            viewModel.switchOriginDestination()
                         } label: {
                             ZStack {
                                 Circle()
@@ -60,6 +74,14 @@ struct TripSelectorView: View {
                 .padding()
                 
                 Spacer()
+            }
+            .navigationDestination(for: LocationRoute.self) { route in
+                switch route {
+                case .origin:
+                    LocationPickerView(viewModel: $viewModel, isOrigin: true, path: $path)
+                case .destination:
+                    LocationPickerView(viewModel: $viewModel, isOrigin: false, path: $path)
+                }
             }
         }
         .tint(.primary)

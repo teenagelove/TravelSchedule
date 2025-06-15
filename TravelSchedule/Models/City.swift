@@ -7,5 +7,5 @@
 
 struct City: Hashable {
     let name: String
-    let station: [Station]
+    let stations: [Station]
 }
