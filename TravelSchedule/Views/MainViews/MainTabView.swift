@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    
     var body: some View {
         TabView {
             TripSelectorView()
@@ -24,6 +26,7 @@ struct MainTabView: View {
             Divider()
                 .padding(.bottom, 60)
         }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
 
