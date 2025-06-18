@@ -7,113 +7,107 @@
 
 import SwiftUI
 
-enum LocationRoute: Hashable {
-    case origin
-    case destination
-    case stationSelection(City, Bool)
-}
-
 struct TripSelectorView: View {
     @State private var viewModel: ViewModel = ViewModel()
-    @State private var path: [LocationRoute] = []
+    @State private var isPresentingOriginPicker = false
+    @State private var isPresentingDestinationPicker = false
 
     var body: some View {
-        NavigationStack(path: $path) {
-            VStack {
-                ZStack {
-                    Color.blue
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                    HStack(spacing: 16) {
-                        VStack(alignment: .leading) {
-                            LocationSelectionButton(
-                                title: viewModel.originName,
-                                isSelected: viewModel.isOriginSelected
-                            ) {
-                                path.append(.origin)
-                            }
-
-                            Spacer()
-
-                            LocationSelectionButton(
-                                title: viewModel.destinationName,
-                                isSelected: viewModel.isDestinationSelected
-                            ) {
-                                path.append(.destination)
-                            }
+        VStack {
+            ZStack {
+                Color.blue
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                HStack(spacing: 16) {
+                    VStack(alignment: .leading) {
+                        LocationSelectionButton(
+                            title: viewModel.originName,
+                            isSelected: viewModel.isOriginSelected
+                        ) {
+                            isPresentingOriginPicker = true
                         }
-                        .padding()
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity,
-                            alignment: .leading
-                        )
-                        .background(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
 
-                        Button {
-                            viewModel.switchOriginDestination()
-                        } label: {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.white)
-                                    .frame(width: 36, height: 36)
-                                Image(systemName: .squarePath)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundStyle(.blue)
-                            }
+                        Spacer()
+
+                        LocationSelectionButton(
+                            title: viewModel.destinationName,
+                            isSelected: viewModel.isDestinationSelected
+                        ) {
+                            isPresentingDestinationPicker = true
                         }
                     }
                     .padding()
-                }
-                .frame(height: 128)
-                .padding()
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .leading
+                    )
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
 
-                if viewModel.isOriginSelected && viewModel.isDestinationSelected
-                {
                     Button {
-                        // Action to start the trip
+                        viewModel.switchOriginDestination()
                     } label: {
-                        Text("Найти")
-                            .font(.bold17)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: 150, maxHeight: 60)
-                            .background(Color.blue)
-                            .clipShape(.rect(cornerRadius: 16))
+                        ZStack {
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 36, height: 36)
+                            Image(systemName: .squarePath)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(.blue)
+                        }
                     }
                 }
-
-                Spacer()
+                .padding()
             }
-            .navigationDestination(for: LocationRoute.self) { route in
-                switch route {
-                case .origin:
-                    LocationPickerView(
-                        viewModel: $viewModel,
-                        isOrigin: true,
-                        path: $path
-                    )
-                case .destination:
-                    LocationPickerView(
-                        viewModel: $viewModel,
-                        isOrigin: false,
-                        path: $path
-                    )
-                case .stationSelection(let city, let isOrigin):
-                    LocationPickerView(
-                        viewModel: $viewModel,
-                        isOrigin: isOrigin,
-                        path: $path,
-                        mode: .station(city)
-                    )
+            .frame(height: 128)
+            .padding()
+
+            if viewModel.isOriginSelected && viewModel.isDestinationSelected {
+                Button {
+                    // Action to start the trip
+                } label: {
+                    Text("Найти")
+                        .font(.bold17)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: 150, maxHeight: 60)
+                        .background(Color.blue)
+                        .clipShape(.rect(cornerRadius: 16))
                 }
             }
+
+            Spacer()
+        }
+        .fullScreenCover(isPresented: $isPresentingOriginPicker) {
+            LocationPickerRootView(
+                viewModel: $viewModel,
+                isOrigin: true,
+                onClose: { isPresentingOriginPicker = false }
+                
+            )
+//            LocationPickerView(
+//                viewModel: $viewModel,
+//                isOrigin: true,
+//                onClose: { isPresentingOriginPicker = false }
+//            )
+        }
+        .fullScreenCover(isPresented: $isPresentingDestinationPicker) {
+            LocationPickerRootView(
+                viewModel: $viewModel,
+                isOrigin: false,
+                onClose: { isPresentingDestinationPicker = false }
+                
+            )
+//            LocationPickerView(
+//                viewModel: $viewModel,
+//                isOrigin: false,
+//                onClose: { isPresentingDestinationPicker = false }
+//            )
         }
     }
 }
-
 #Preview {
     TripSelectorView()
 }

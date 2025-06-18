@@ -7,75 +7,49 @@
 
 import SwiftUI
 
-enum LocationPickerMode {
-    case city
-    case station(City)
-}
-
 struct LocationPickerView: View {
-    @Binding var viewModel: ViewModel
-    @State var isOrigin: Bool = true
+    let title: String
+    let stubText: String
+    let cities: [City]
+    let stations: [Station]
     @Binding var path: [LocationRoute]
+    @Binding var viewModel: ViewModel
+    var isOrigin: Bool = true
+    var onClose: (() -> Void)? = nil
+
     @State private var searchText = ""
     @State private var isSearchPresented = false
 
-    var mode: LocationPickerMode = .city
-
-    private var titleText: String {
-        switch mode {
-        case .city:
-            return "Выберите город"
-        case .station(let city):
-            return city.name
-        }
-    }
-
-    private var stubText: String {
-        switch mode {
-        case .city:
-            return "Город не найден"
-        case .station:
-            return "Станция не найдена"
-        }
-    }
-
     private var filteredCities: [City] {
-        guard case .city = mode else { return [] }
-        return viewModel.cities.filter {
+        cities.filter {
             searchText.isEmpty
                 || $0.name.localizedCaseInsensitiveContains(searchText)
         }
     }
 
     private var filteredStations: [Station] {
-        guard case .station(let city) = mode else { return [] }
-        return city.stations.filter {
+        stations.filter {
             searchText.isEmpty
                 || $0.name.localizedCaseInsensitiveContains(searchText)
         }
     }
 
     private var isListEmpty: Bool {
-        switch mode {
-        case .city:
-            return filteredCities.isEmpty
-        case .station:
-            return filteredStations.isEmpty
-        }
+        !cities.isEmpty ? filteredCities.isEmpty : filteredStations.isEmpty
     }
 
     var body: some View {
         Group {
-            switch mode {
-            case .city:
+            if !cities.isEmpty {
                 LocationListView(
                     items: filteredCities,
                     itemTitle: { $0.name },
                     onItemTap: { city in
-                        path.append(.stationSelection(city, isOrigin))
+                        path.append(.station(city))
+                        searchText = ""
                     }
                 )
-            case .station:
+            } else {
                 LocationListView(
                     items: filteredStations,
                     itemTitle: { $0.name },
@@ -85,7 +59,7 @@ struct LocationPickerView: View {
                         } else {
                             viewModel.selectedDestination = station
                         }
-                        path.removeAll()
+                        onClose?()
                     }
                 )
             }
@@ -105,13 +79,13 @@ struct LocationPickerView: View {
                 VStack {
                     Spacer()
                     Text(stubText)
-                        .font(.bold24)
+                        .font(.title.bold())
                         .foregroundColor(.primary)
                     Spacer()
                 }
             }
         }
-        .navigationTitle(titleText)
+        .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -124,10 +98,13 @@ struct LocationPickerView: View {
 
 #Preview {
     @Previewable @State var viewModel = ViewModel()
+    @Previewable @State var path = [LocationRoute]()
     LocationPickerView(
-        viewModel: $viewModel,
-        isOrigin: true,
-        path: .constant([]),
-        mode: .city
+        title: "Выбор локации",
+        stubText: "Город не найден",
+        cities: [],
+        stations: viewModel.cities[0].stations,
+        path: $path,
+        viewModel: $viewModel
     )
 }
