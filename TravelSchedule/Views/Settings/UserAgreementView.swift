@@ -12,13 +12,14 @@ struct UserAgreementView: View {
         ScrollView {
             Text(UserAgreement.text)
         }
-        .padding()
-//        .navigationBarBackButtonHidden(true)
-//        .toolbar {
-//            ToolbarItem(placement: .navigationBarLeading) {
-//                BackButton()
-//            }
-//        }
+        .ignoresSafeArea(edges: .bottom)
+        .padding(.horizontal)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                BackButton()
+            }
+        }
     }
 }
 

@@ -9,40 +9,41 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
-    
+    @State private var showUserAgreement = false
+
     var body: some View {
-        NavigationStack {
-            VStack {
-                List {
-                    Toggle("Темная тема", isOn: $isDarkMode)
-                        .tint(.blue)
-                        .preferredColorScheme(isDarkMode ? .dark : .light)
-                        .listRowSeparator(.hidden, edges: .top)
-                    
-                    NavigationLink {
-                        UserAgreementView()
-                            .navigationTitle("Пользовательское соглашение")
-                            .navigationBarTitleDisplayMode(.inline)
-                    } label: {
-                        Text("Пользовательское соглашение")
-                    }
-                    .listRowSeparator(.hidden, edges: .all)
-                    .foregroundStyle(.primary, .primary)
+        VStack {
+            List {
+                Toggle("Темная тема", isOn: $isDarkMode)
+                    .tint(.blue)
+                    .listRowSeparator(.hidden, edges: .top)
+
+                ListRowButton(title: "Пользовательское соглашение") {
+                    showUserAgreement.toggle()
                 }
-                .listStyle(.plain)
-                
-                Spacer()
-                
-                Group {
-                    Text("Приложение использует API «Яндекс.Расписания»")
-                        .padding(.bottom)
-                    Text("Версия 1.0 (beta)")
-                }
-                .font(.regular12)
+
+                .listRowSeparator(.hidden, edges: .all)
+                .foregroundStyle(.primary, .primary)
             }
-            .padding()
+            .listStyle(.plain)
+
+            Spacer()
+
+            Group {
+                Text("Приложение использует API «Яндекс.Расписания»")
+                    .padding(.bottom)
+                Text("Версия 1.0 (beta)")
+            }
+            .font(.regular12)
         }
-        .tint(.primary)
+        .padding()
+        .fullScreenCover(isPresented: $showUserAgreement) {
+            NavigationStack {
+                UserAgreementView()
+                    .navigationTitle("Пользовательское соглашение")
+                    .navigationBarTitleDisplayMode(.inline)
+            }
+        }
     }
 }
 

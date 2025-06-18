@@ -10,49 +10,46 @@ import SwiftUI
 enum LocationRoute: Hashable {
     case origin
     case destination
+    case stationSelection(City, Bool)
 }
 
 struct TripSelectorView: View {
     @State private var viewModel: ViewModel = ViewModel()
     @State private var path: [LocationRoute] = []
-    
+
     var body: some View {
         NavigationStack(path: $path) {
             VStack {
                 ZStack {
                     Color.blue
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                     HStack(spacing: 16) {
                         VStack(alignment: .leading) {
-                            Button {
+                            LocationSelectionButton(
+                                title: viewModel.originName,
+                                isSelected: viewModel.isOriginSelected
+                            ) {
                                 path.append(.origin)
-                            } label: {
-                                Text(viewModel.originName)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundStyle(
-                                        !viewModel.isOriginSelected ? .gray : .primary
-                                    )
-                                    .font(.regular17)
                             }
-                            
+
                             Spacer()
-                            
-                            Button {
+
+                            LocationSelectionButton(
+                                title: viewModel.destinationName,
+                                isSelected: viewModel.isDestinationSelected
+                            ) {
                                 path.append(.destination)
-                            } label: {
-                                Text(viewModel.destinationName)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundStyle(
-                                        !viewModel.isDestinationSelected ? .gray : .primary
-                                    )
-                                    .font(.regular17)
                             }
                         }
                         .padding()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity,
+                            alignment: .leading
+                        )
                         .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
-                        
+
                         Button {
                             viewModel.switchOriginDestination()
                         } label: {
@@ -72,19 +69,48 @@ struct TripSelectorView: View {
                 }
                 .frame(height: 128)
                 .padding()
-                
+
+                if viewModel.isOriginSelected && viewModel.isDestinationSelected
+                {
+                    Button {
+                        // Action to start the trip
+                    } label: {
+                        Text("Найти")
+                            .font(.bold17)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: 150, maxHeight: 60)
+                            .background(Color.blue)
+                            .clipShape(.rect(cornerRadius: 16))
+                    }
+                }
+
                 Spacer()
             }
             .navigationDestination(for: LocationRoute.self) { route in
                 switch route {
                 case .origin:
-                    LocationPickerView(viewModel: $viewModel, isOrigin: true, path: $path)
+                    LocationPickerView(
+                        viewModel: $viewModel,
+                        isOrigin: true,
+                        path: $path
+                    )
                 case .destination:
-                    LocationPickerView(viewModel: $viewModel, isOrigin: false, path: $path)
+                    LocationPickerView(
+                        viewModel: $viewModel,
+                        isOrigin: false,
+                        path: $path
+                    )
+                case .stationSelection(let city, let isOrigin):
+                    LocationPickerView(
+                        viewModel: $viewModel,
+                        isOrigin: isOrigin,
+                        path: $path,
+                        mode: .station(city)
+                    )
                 }
             }
         }
-        .tint(.primary)
     }
 }
 

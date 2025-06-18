@@ -5,6 +5,9 @@
 //  Created by Danil Kazakov on 15.06.2025.
 //
 
-struct Station: Hashable {
+import Foundation
+
+struct Station: Hashable, Identifiable {
+    let id = UUID()
     let name: String
 }

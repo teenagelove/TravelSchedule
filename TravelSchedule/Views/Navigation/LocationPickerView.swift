@@ -17,9 +17,10 @@ struct LocationPickerView: View {
     @State var isOrigin: Bool = true
     @Binding var path: [LocationRoute]
     @State private var searchText = ""
-    @Environment(\.dismiss) private var dismiss
+    @State private var isSearchPresented = false
+
     var mode: LocationPickerMode = .city
-    
+
     private var titleText: String {
         switch mode {
         case .city:
@@ -28,69 +29,88 @@ struct LocationPickerView: View {
             return city.name
         }
     }
-    
+
+    private var stubText: String {
+        switch mode {
+        case .city:
+            return "Город не найден"
+        case .station:
+            return "Станция не найдена"
+        }
+    }
+
     private var filteredCities: [City] {
         guard case .city = mode else { return [] }
         return viewModel.cities.filter {
-            searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)
+            searchText.isEmpty
+                || $0.name.localizedCaseInsensitiveContains(searchText)
         }
     }
-    
+
     private var filteredStations: [Station] {
         guard case .station(let city) = mode else { return [] }
         return city.stations.filter {
-            searchText.isEmpty || $0.name.localizedCaseInsensitiveContains(searchText)
+            searchText.isEmpty
+                || $0.name.localizedCaseInsensitiveContains(searchText)
         }
     }
-    
+
+    private var isListEmpty: Bool {
+        switch mode {
+        case .city:
+            return filteredCities.isEmpty
+        case .station:
+            return filteredStations.isEmpty
+        }
+    }
+
     var body: some View {
         Group {
             switch mode {
             case .city:
-                List(filteredCities, id: \.self) { city in
-                    NavigationLink(
-                        destination: LocationPickerView(
-                            viewModel: $viewModel,
-                            isOrigin: isOrigin,
-                            path: $path,
-                            mode: .station(city)
-                        )
-                    ) {
-                        Text(city.name)
-                            .font(.regular17)
+                LocationListView(
+                    items: filteredCities,
+                    itemTitle: { $0.name },
+                    onItemTap: { city in
+                        path.append(.stationSelection(city, isOrigin))
                     }
-                    .listRowSeparator(.hidden, edges: .all)
-                }
+                )
             case .station:
-                List(filteredStations, id: \.self) { station in
-                    Button {
+                LocationListView(
+                    items: filteredStations,
+                    itemTitle: { $0.name },
+                    onItemTap: { station in
                         if isOrigin {
                             viewModel.selectedOrigin = station
-                            print("Selected origin: \(station.name)")
                         } else {
                             viewModel.selectedDestination = station
-                            print("Selected destination: \(station.name)")
                         }
-                        print("OLD PATH: \(path)")
                         path.removeAll()
-                        print("NEW PATH: \(path)")
-                    } label: {
-                        HStack {
-                            Text(station.name)
-                                .font(.regular17)
-                            Spacer()
-                            Image(systemName: .chevronRight)
-                                .foregroundColor(.primary)
-                        }
-                        .contentShape(Rectangle())
                     }
-                    .listRowSeparator(.hidden, edges: .all)
+                )
+            }
+        }
+        .listStyle(.plain)
+        .searchable(
+            text: $searchText,
+            isPresented: $isSearchPresented,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Введите запрос"
+        )
+        .onChange(of: path) { _, _ in
+            isSearchPresented = false
+        }
+        .overlay {
+            if isListEmpty && !searchText.isEmpty {
+                VStack {
+                    Spacer()
+                    Text(stubText)
+                        .font(.bold24)
+                        .foregroundColor(.primary)
+                    Spacer()
                 }
             }
         }
-        .foregroundStyle(.primary, .primary)
-        .listStyle(.plain)
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Введите запрос")
         .navigationTitle(titleText)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -102,6 +122,12 @@ struct LocationPickerView: View {
     }
 }
 
-//#Preview {
-//    LocationPickerView(viewModel: ViewModel())
-//}
+#Preview {
+    @Previewable @State var viewModel = ViewModel()
+    LocationPickerView(
+        viewModel: $viewModel,
+        isOrigin: true,
+        path: .constant([]),
+        mode: .city
+    )
+}
