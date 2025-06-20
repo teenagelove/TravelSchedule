@@ -13,7 +13,7 @@ struct LocationPickerView: View {
     let cities: [City]
     let stations: [Station]
     @Binding var path: [LocationRoute]
-    @Binding var viewModel: ViewModel
+    @Binding var viewModel: PickerViewModel
     var isOrigin: Bool = true
     var onClose: (() -> Void)? = nil
 
@@ -97,7 +97,7 @@ struct LocationPickerView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = ViewModel()
+    @Previewable @State var viewModel = PickerViewModel()
     @Previewable @State var path = [LocationRoute]()
     LocationPickerView(
         title: "Выбор локации",

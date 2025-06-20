@@ -19,7 +19,7 @@ struct BackButton: View {
         }) {
             Image(systemName: systemName)
                 .foregroundColor(color)
-                .imageScale(.large)
+                .font(.system(size: 24))
         }
     }
 }

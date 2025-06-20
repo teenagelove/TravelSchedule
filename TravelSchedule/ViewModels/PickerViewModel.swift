@@ -1,5 +1,5 @@
 //
-//  ViewModel.swift
+//  PickerViewModel.swift
 //  TravelSchedule
 //
 //  Created by Danil Kazakov on 15.06.2025.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @Observable
-final class ViewModel {
+final class PickerViewModel {
     var cities: [City] = []
     var selectedOrigin: Station? = nil
     var selectedDestination: Station? = nil

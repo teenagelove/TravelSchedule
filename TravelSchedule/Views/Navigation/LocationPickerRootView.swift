@@ -13,7 +13,7 @@ enum LocationRoute: Hashable {
 }
 
 struct LocationPickerRootView: View {
-    @Binding var viewModel: ViewModel
+    @Binding var viewModel: PickerViewModel
     @State var path: [LocationRoute] = []
     var isOrigin: Bool
     var onClose: (() -> Void)? = nil
@@ -51,6 +51,6 @@ struct LocationPickerRootView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = ViewModel()
+    @Previewable @State var viewModel = PickerViewModel()
     LocationPickerRootView(viewModel: $viewModel, isOrigin: true)
 }

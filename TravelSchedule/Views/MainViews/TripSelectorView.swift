@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct TripSelectorView: View {
-    @State private var viewModel: ViewModel = ViewModel()
+    @State private var viewModel: PickerViewModel = PickerViewModel()
     @State private var isPresentingOriginPicker = false
     @State private var isPresentingDestinationPicker = false
+    @State private var isPresentingRoutePicker = false
 
     var body: some View {
         VStack {
@@ -66,11 +67,11 @@ struct TripSelectorView: View {
 
             if viewModel.isOriginSelected && viewModel.isDestinationSelected {
                 Button {
-                    // Action to start the trip
+                    isPresentingRoutePicker = true
                 } label: {
                     Text("Найти")
                         .font(.bold17)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .padding()
                         .frame(maxWidth: 150, maxHeight: 60)
                         .background(Color.blue)
@@ -85,26 +86,20 @@ struct TripSelectorView: View {
                 viewModel: $viewModel,
                 isOrigin: true,
                 onClose: { isPresentingOriginPicker = false }
-                
             )
-//            LocationPickerView(
-//                viewModel: $viewModel,
-//                isOrigin: true,
-//                onClose: { isPresentingOriginPicker = false }
-//            )
         }
         .fullScreenCover(isPresented: $isPresentingDestinationPicker) {
             LocationPickerRootView(
                 viewModel: $viewModel,
                 isOrigin: false,
                 onClose: { isPresentingDestinationPicker = false }
-                
             )
-//            LocationPickerView(
-//                viewModel: $viewModel,
-//                isOrigin: false,
-//                onClose: { isPresentingDestinationPicker = false }
-//            )
+        }
+        .fullScreenCover(isPresented: $isPresentingRoutePicker) {
+            RoutePickerView(
+                originName: viewModel.originName,
+                destinationName: viewModel.destinationName,
+            )
         }
     }
 }

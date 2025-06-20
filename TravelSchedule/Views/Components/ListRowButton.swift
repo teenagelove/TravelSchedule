@@ -10,7 +10,7 @@ import SwiftUI
 struct ListRowButton: View {
     let title: String
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             HStack {
@@ -19,6 +19,7 @@ struct ListRowButton: View {
                 Spacer()
                 Image(systemName: .chevronRight)
                     .foregroundColor(.primary)
+                    .font(.system(size: 24))
             }
             .contentShape(.rect())
         }
@@ -29,6 +30,7 @@ struct ListRowButton: View {
     ListRowButton(
         title: "Пользовательское соглашение",
         action: {
-        print("Button tapped")
-    })
+            print("Button tapped")
+        }
+    )
 }

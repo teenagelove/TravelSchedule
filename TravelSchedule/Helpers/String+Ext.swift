@@ -13,4 +13,9 @@ extension String {
     static let chevronRight = "chevron.right"
     static let chevronLeft = "chevron.left"
     static let squarePath = "arrow.2.squarepath"
+    static let circle = "circle"
+    static let circleFill = "circle.fill"
+    static let fillCircle = "largecircle.fill.circle"
+    static let checkmarkFill = "checkmark.square.fill"
+    static let square = "square"
 }

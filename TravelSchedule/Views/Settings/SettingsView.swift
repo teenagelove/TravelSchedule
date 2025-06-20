@@ -9,19 +9,32 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
-    @State private var showUserAgreement = false
+    @State private var isUserAgreementPresenting = false
+    @State private var isServerErrorPresenting = false
+    @State private var isNetworkErrorPresenting = false
 
     var body: some View {
         VStack {
             List {
-                Toggle("Темная тема", isOn: $isDarkMode)
-                    .tint(.blue)
-                    .listRowSeparator(.hidden, edges: .top)
+                Group {
+                    Toggle("Темная тема", isOn: $isDarkMode)
+                        .tint(.blue)
+                        .listRowSeparator(.hidden, edges: .top)
+                    // TODO: Implement color scheme toggle
+                    //                    .preferredColorScheme(isDarkMode ? .dark : .light)
 
-                ListRowButton(title: "Пользовательское соглашение") {
-                    showUserAgreement.toggle()
+                    ListRowButton(title: "Пользовательское соглашение") {
+                        isUserAgreementPresenting.toggle()
+                    }
+
+                    ListRowButton(title: "Показать ошибку сервера") {
+                        isServerErrorPresenting.toggle()
+                    }
+
+                    ListRowButton(title: "Показать ошибку интернета") {
+                        isNetworkErrorPresenting.toggle()
+                    }
                 }
-
                 .listRowSeparator(.hidden, edges: .all)
                 .foregroundStyle(.primary, .primary)
             }
@@ -36,14 +49,21 @@ struct SettingsView: View {
             }
             .font(.regular12)
         }
-        .padding()
-        .fullScreenCover(isPresented: $showUserAgreement) {
+        .padding(.vertical)
+        .sheet(isPresented: $isServerErrorPresenting) {
+            ServerErrorView()
+        }
+        .sheet(isPresented: $isNetworkErrorPresenting) {
+            NetworkErrorView()
+        }
+        .fullScreenCover(isPresented: $isUserAgreementPresenting) {
             NavigationStack {
                 UserAgreementView()
                     .navigationTitle("Пользовательское соглашение")
                     .navigationBarTitleDisplayMode(.inline)
             }
         }
+
     }
 }
 
