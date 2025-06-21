@@ -8,20 +8,27 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("isDarkMode") private var isDarkMode = false
+    @Binding var isDarkMode: Bool?
+    
+    @Environment(\.colorScheme) private var systemScheme
     @State private var isUserAgreementPresenting = false
     @State private var isServerErrorPresenting = false
     @State private var isNetworkErrorPresenting = false
+    
+    private var toggleState: Binding<Bool> {
+        Binding(
+            get: { isDarkMode ?? (systemScheme == .dark) },
+            set: { isDarkMode = $0 }
+        )
+    }
 
     var body: some View {
         VStack {
             List {
                 Group {
-                    Toggle("Темная тема", isOn: $isDarkMode)
+                    Toggle("Темная тема", isOn: toggleState)
                         .tint(.blue)
                         .listRowSeparator(.hidden, edges: .top)
-                    // TODO: Implement color scheme toggle
-                    //                    .preferredColorScheme(isDarkMode ? .dark : .light)
 
                     ListRowButton(title: "Пользовательское соглашение") {
                         isUserAgreementPresenting.toggle()
@@ -68,5 +75,6 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView()
+    @Previewable @State var isDarkMode: Bool? = false
+    SettingsView(isDarkMode: $isDarkMode)
 }

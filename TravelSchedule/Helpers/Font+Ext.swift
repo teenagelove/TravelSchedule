@@ -5,7 +5,7 @@
 //  Created by Danil Kazakov on 15.06.2025.
 //
 
-import SwiftUICore
+import SwiftUI
 
 extension Font {
     static let regular12 = Font.system(size: 12, weight: .regular)

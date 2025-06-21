@@ -14,10 +14,11 @@ struct BackButton: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        Button(action: {
+        Button {
             action?() ?? dismiss()
-        }) {
+        } label: {
             Image(systemName: systemName)
+
                 .foregroundColor(color)
                 .font(.system(size: 24))
         }

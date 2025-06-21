@@ -12,6 +12,7 @@ struct NetworkErrorView: View {
         VStack {
             Image(.networkError)
                 .padding()
+            
             Text("Нет интернета")
                 .font(.bold24)
                 .foregroundColor(.primary)

@@ -10,21 +10,19 @@ import SwiftUI
 struct FilterView: View {
     @Binding var viewModel: RouteViewModel
     @Environment(\.dismiss) private var dismiss
-
+    
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 Text("Время отправления")
                     .font(.bold24)
                     .foregroundStyle(.primary)
-
+                
                 VStack(spacing: 16) {
                     ForEach(TimeSlot.allCases, id: \.self) { timeSlot in
                         TimeSlotRow(
                             title: timeSlot.rawValue,
-                            isSelected: viewModel.selectedTimeSlots.contains(
-                                timeSlot
-                            )
+                            isSelected: viewModel.selectedTimeSlots.contains(timeSlot)
                         ) {
                             viewModel.toggleTimeSlot(timeSlot)
                         }
@@ -32,12 +30,12 @@ struct FilterView: View {
                     .padding(.vertical)
                 }
             }
-
+            
             VStack(alignment: .leading, spacing: 16) {
                 Text("Показывать варианты с пересадками")
                     .font(.bold24)
                     .foregroundStyle(.primary)
-
+                
                 VStack(spacing: 16) {
                     RadioButton(
                         title: "Да",
@@ -45,7 +43,7 @@ struct FilterView: View {
                     ) {
                         viewModel.setShowTransfers(true)
                     }
-
+                    
                     RadioButton(
                         title: "Нет",
                         isSelected: !viewModel.showTransfers
@@ -54,9 +52,9 @@ struct FilterView: View {
                     }
                 }
             }
-
+            
             Spacer()
-
+            
             Button(
                 action: {
                     viewModel.applyFilters()

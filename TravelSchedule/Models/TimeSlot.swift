@@ -16,7 +16,7 @@ enum TimeSlot: String, CaseIterable {
 extension TimeSlot {
     func contains(time: String) -> Bool {
         guard let hour = extractHour(from: time) else { return false }
-
+        
         switch self {
         case .morning: return hour >= 6 && hour < 12
         case .day: return hour >= 12 && hour < 18
@@ -27,8 +27,8 @@ extension TimeSlot {
 }
 
 // MARK: - Private Methods
-extension TimeSlot {
-    fileprivate func extractHour(from timeString: String) -> Int? {
+private extension TimeSlot {
+    func extractHour(from timeString: String) -> Int? {
         let components = timeString.split(separator: ":")
         guard let hourString = components.first else { return nil }
         return Int(hourString)
