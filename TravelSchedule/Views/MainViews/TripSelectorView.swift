@@ -12,9 +12,16 @@ struct TripSelectorView: View {
     @State private var isPresentingOriginPicker = false
     @State private var isPresentingDestinationPicker = false
     @State private var isPresentingRoutePicker = false
+    @State private var selectedTopic: Topic? = nil
+    
+    private let topics = Topic.allTopics
 
     var body: some View {
         VStack {
+            StoriesPreview(topics: topics) { topic in
+                selectedTopic = topic
+            }
+            
             ZStack {
                 Color.blue
                     .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -100,6 +107,9 @@ struct TripSelectorView: View {
                 originName: viewModel.originName,
                 destinationName: viewModel.destinationName,
             )
+        }
+        .fullScreenCover(item: $selectedTopic) { topic in
+            StoriesRootView(stories: topic.stories)
         }
     }
 }
