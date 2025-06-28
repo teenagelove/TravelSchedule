@@ -10,7 +10,7 @@ import SwiftUI
 struct StoriesTabView: View {
     let stories: [Story]
     @Binding var currentStoryIndex: Int
-
+    
     var body: some View {
         TabView(selection: $currentStoryIndex) {
             ForEach(stories.indices, id: \.self) { index in
@@ -25,9 +25,11 @@ struct StoriesTabView: View {
     }
 }
 
-extension StoriesTabView {
-    fileprivate func didTapStory() {
-        currentStoryIndex = min(currentStoryIndex + 1, stories.count - 1)
+private extension StoriesTabView {
+    func didTapStory() {
+        withAnimation {
+            currentStoryIndex += 1
+        }
     }
 }
 

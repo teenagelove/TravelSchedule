@@ -11,9 +11,40 @@ import SwiftUI
 @Observable
 class TopicsViewModel {
     var topics: [Topic] = Topic.allTopics
-    var currentStoryIndex: Int = 0
     var currentProgress: CGFloat = 0
     var currentTopic: Topic?
+    var shouldDismiss = false
+    
+    var currentStoryIndex: Int = 0 {
+        didSet {
+            guard oldValue < currentStoryIndex else { return }
+            guard let config = timerConfiguration else { return }
+            
+            if currentStoryIndex == config.storiesCount - 1 {
+                markCurrentTopicAsViewed()
+            }
+            
+            if currentStoryIndex >= config.storiesCount {
+                if isAtLastStoryInLastTopic {
+                    stopTimer()
+                    shouldDismiss = true
+                    skipProgressUpdate = true
+                } else {
+                    toNextTopic()
+                }
+            }
+        }
+    }
+    
+    var isAtLastStoryInLastTopic: Bool {
+        guard let currentTopic = currentTopic else { return false }
+        guard let currentTopicIndex = topics.firstIndex(where: { $0.id == currentTopic.id }) else { return false }
+        
+        let wouldBeLastStory = (currentStoryIndex + 1) >= currentTopic.stories.count
+        let isLastTopic = currentTopicIndex >= (topics.count - 1)
+        
+        return wouldBeLastStory && isLastTopic
+    }
     
     var timerConfiguration: TimerConfiguration? {
         guard let currentTopic = currentTopic else { return nil }
@@ -22,6 +53,7 @@ class TopicsViewModel {
     
     private var timer: Timer.TimerPublisher?
     private var cancellable: Cancellable?
+    private var skipProgressUpdate = false
     
     func startTimer() {
         guard let config = timerConfiguration else { return }
@@ -36,10 +68,11 @@ class TopicsViewModel {
         cancellable?.cancel()
         cancellable = nil
         timer = nil
-        currentProgress = 0
     }
     
     func startViewingTopic(_ topic: Topic) {
+        shouldDismiss = false
+        skipProgressUpdate = false
         currentTopic = topic
         currentStoryIndex = 0
         currentProgress = 0
@@ -58,24 +91,24 @@ class TopicsViewModel {
     }
     
     func didChangeCurrentIndex(oldIndex: Int, newIndex: Int) {
+        guard !skipProgressUpdate else { return }
         guard oldIndex != newIndex else { return }
         guard let timerConfig = timerConfiguration else { return }
         
-        if timerConfig.isLastStory(for: currentStoryIndex) {
-            markCurrentTopicAsViewed()
-        }
-        
         let progress = timerConfig.progress(for: newIndex)
         guard abs(progress - currentProgress) >= 0.01 else { return }
+        
         withAnimation {
             currentProgress = progress
         }
     }
     
     func didChangeCurrentProgress(newProgress: CGFloat) {
+        guard !skipProgressUpdate else { return }
         guard let timerConfig = timerConfiguration else { return }
         let index = timerConfig.index(for: newProgress)
         guard index != currentStoryIndex else { return }
+        
         withAnimation {
             currentStoryIndex = index
         }
@@ -83,7 +116,7 @@ class TopicsViewModel {
 }
 
 private extension TopicsViewModel {
-    func nextTopic() -> Topic? {
+    func getNextTopic() -> Topic? {
         guard let currentTopic = currentTopic else { return nil }
         guard let currentIndex = topics.firstIndex(where: { $0.id == currentTopic.id }) else { return nil }
         
@@ -97,16 +130,30 @@ private extension TopicsViewModel {
         let newProgress = config.nextProgress(progress: currentProgress)
         
         withAnimation {
-            currentProgress = config.nextProgress(progress: currentProgress)
+            currentProgress = newProgress
         }
         
         if newProgress >= 1.0 {
-            markCurrentTopicAsViewed()
-            stopTimer()
-
-            if let next = nextTopic() {
-                startViewingTopic(next)
+            if isAtLastStoryInLastTopic {
+                markCurrentTopicAsViewed()
+                stopTimer()
+                shouldDismiss = true
+            } else {
+                withAnimation {
+                    toNextTopic()
+                }
             }
+        }
+    }
+    
+    func toNextTopic() {
+        stopTimer()
+        
+        if let next = getNextTopic() {
+            startViewingTopic(next)
+            startTimer()
+        } else {
+            shouldDismiss = true
         }
     }
 }

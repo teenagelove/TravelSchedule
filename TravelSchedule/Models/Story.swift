@@ -15,14 +15,15 @@ struct Story: Identifiable {
 }
 
 struct Topic: Identifiable {
-    let id = UUID()
+    let id: UUID
     let previewName: String
     let stories: [Story]
     let title: String
     let isViewed: Bool
     
     
-    init(previewName: String, stories: [Story], isViewed: Bool = false) {
+    init(id: UUID = UUID(), previewName: String, stories: [Story], isViewed: Bool = false) {
+        self.id = id
         self.previewName = previewName
         self.stories = stories
         self.title = stories.first?.title ?? "Без названия"
@@ -31,6 +32,7 @@ struct Topic: Identifiable {
     
     func markAsViewed() -> Topic {
         Topic(
+            id: self.id,
             previewName: self.previewName,
             stories: self.stories,
             isViewed: true
