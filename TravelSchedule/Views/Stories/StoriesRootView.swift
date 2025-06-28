@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct StoriesRootView: View {
-    let stories: [Story]
+    let viewModel: TopicsViewModel
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            StoriesView(stories: stories)
+            StoriesView(viewModel: viewModel)
             CloseButton()
                 .padding(.top, 57)
                 .padding(.trailing, 12)
@@ -21,7 +21,8 @@ struct StoriesRootView: View {
 }
 
 #Preview {
-    let stories = Topic.topic1.stories
+    let vm = TopicsViewModel()
+    vm.startViewingTopic(Topic.topic1)
     
-    StoriesRootView(stories: stories)
+    return StoriesRootView(viewModel: vm)
 }

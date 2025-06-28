@@ -35,4 +35,8 @@ extension TimerConfiguration {
     func nextProgress(progress: CGFloat) -> CGFloat {
         return min(progress + progressPerTick, 1)
     }
+    
+    func isLastStory(for storyIndex: Int) -> Bool {
+        return storyIndex == storiesCount - 1
+    }
 }

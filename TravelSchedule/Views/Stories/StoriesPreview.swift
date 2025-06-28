@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StoriesPreview: View {
-    let topics: [Topic]
+    @Binding var topics: [Topic]
     let onTapTopic: (Topic) -> Void
 
     var body: some View {
@@ -20,6 +20,7 @@ struct StoriesPreview: View {
                         .scaledToFit()
                         .frame(width: 92, height: 140)
                         .clipShape(.rect(cornerRadius: 16))
+                        .opacity(topic.isViewed ? 0.5 : 1)
                         .overlay {
                             RoundedRectangle(cornerRadius: 16)
                                 .stroke(.blue, lineWidth: 4)
@@ -50,9 +51,9 @@ struct StoriesPreview: View {
 }
 
 #Preview {
-    let topics: [Topic] = [.topic1, .topic2, .topic3, .topic4]
+    @Previewable @State var topics: [Topic] = [.topic1, .topic2, .topic3, .topic4]
 
-    StoriesPreview(topics: topics) {
+    StoriesPreview(topics: $topics) {
         print("Tapped on topic: \($0.title)")
     }
 }

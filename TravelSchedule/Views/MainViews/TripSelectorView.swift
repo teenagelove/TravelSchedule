@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct TripSelectorView: View {
-    @State private var viewModel: PickerViewModel = PickerViewModel()
+    @State private var viewModel = PickerViewModel()
+    @State private var topicsViewModel = TopicsViewModel()
     @State private var isPresentingOriginPicker = false
     @State private var isPresentingDestinationPicker = false
     @State private var isPresentingRoutePicker = false
     @State private var selectedTopic: Topic? = nil
     
-    private let topics = Topic.allTopics
-
     var body: some View {
         VStack {
-            StoriesPreview(topics: topics) { topic in
+            StoriesPreview(topics: $topicsViewModel.topics) { topic in
+                topicsViewModel.startViewingTopic(topic)
                 selectedTopic = topic
             }
             
@@ -33,9 +33,9 @@ struct TripSelectorView: View {
                         ) {
                             isPresentingOriginPicker = true
                         }
-
+                        
                         Spacer()
-
+                        
                         LocationSelectionButton(
                             title: viewModel.destinationName,
                             isSelected: viewModel.isDestinationSelected
@@ -51,7 +51,7 @@ struct TripSelectorView: View {
                     )
                     .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
-
+                    
                     Button {
                         viewModel.switchOriginDestination()
                     } label: {
@@ -71,7 +71,7 @@ struct TripSelectorView: View {
             }
             .frame(height: 128)
             .padding()
-
+            
             if viewModel.isOriginSelected && viewModel.isDestinationSelected {
                 Button {
                     isPresentingRoutePicker = true
@@ -85,7 +85,7 @@ struct TripSelectorView: View {
                         .clipShape(.rect(cornerRadius: 16))
                 }
             }
-
+            
             Spacer()
         }
         .fullScreenCover(isPresented: $isPresentingOriginPicker) {
@@ -108,11 +108,12 @@ struct TripSelectorView: View {
                 destinationName: viewModel.destinationName,
             )
         }
-        .fullScreenCover(item: $selectedTopic) { topic in
-            StoriesRootView(stories: topic.stories)
+        .fullScreenCover(item: $selectedTopic) { _ in
+            StoriesRootView(viewModel: topicsViewModel)
         }
     }
 }
+
 #Preview {
     TripSelectorView()
 }

@@ -19,15 +19,24 @@ struct Topic: Identifiable {
     let previewName: String
     let stories: [Story]
     let title: String
-    var isViewed = false
+    let isViewed: Bool
     
-    init(previewName: String, stories: [Story], isSeen: Bool = false) {
+    
+    init(previewName: String, stories: [Story], isViewed: Bool = false) {
         self.previewName = previewName
         self.stories = stories
-        self.isViewed = isSeen
-        title = stories[0].title
+        self.title = stories.first?.title ?? "Без названия"
+        self.isViewed = isViewed
     }
-
+    
+    func markAsViewed() -> Topic {
+        Topic(
+            previewName: self.previewName,
+            stories: self.stories,
+            isViewed: true
+        )
+    }
+    
     static let topic1 = Topic(
         previewName: "topic1",
         stories: [
