@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 @Observable
-class TopicsViewModel {
+final class TopicsViewModel {
     var topics: [Topic] = Topic.allTopics
     var currentProgress: CGFloat = 0
     var currentTopic: Topic?
@@ -17,33 +17,8 @@ class TopicsViewModel {
     
     var currentStoryIndex: Int = 0 {
         didSet {
-            guard oldValue < currentStoryIndex else { return }
-            guard let config = timerConfiguration else { return }
-            
-            if currentStoryIndex == config.storiesCount - 1 {
-                markCurrentTopicAsViewed()
-            }
-            
-            if currentStoryIndex >= config.storiesCount {
-                if isAtLastStoryInLastTopic {
-                    stopTimer()
-                    shouldDismiss = true
-                    skipProgressUpdate = true
-                } else {
-                    toNextTopic()
-                }
-            }
+            handleStoryIndexChange(oldValue: oldValue, newValue: currentStoryIndex)
         }
-    }
-    
-    var isAtLastStoryInLastTopic: Bool {
-        guard let currentTopic = currentTopic else { return false }
-        guard let currentTopicIndex = topics.firstIndex(where: { $0.id == currentTopic.id }) else { return false }
-        
-        let wouldBeLastStory = (currentStoryIndex + 1) >= currentTopic.stories.count
-        let isLastTopic = currentTopicIndex >= (topics.count - 1)
-        
-        return wouldBeLastStory && isLastTopic
     }
     
     var timerConfiguration: TimerConfiguration? {
@@ -73,21 +48,9 @@ class TopicsViewModel {
     func startViewingTopic(_ topic: Topic) {
         shouldDismiss = false
         skipProgressUpdate = false
-        currentTopic = topic
         currentStoryIndex = 0
         currentProgress = 0
-    }
-    
-    func markCurrentTopicAsViewed() {
-        guard let currentTopic = currentTopic else { return }
-        
-        topics = topics.map { topic in
-            if topic.id == currentTopic.id {
-                return topic.markAsViewed()
-            } else {
-                return topic
-            }
-        }
+        currentTopic = topic
     }
     
     func didChangeCurrentIndex(oldIndex: Int, newIndex: Int) {
@@ -97,6 +60,7 @@ class TopicsViewModel {
         
         let progress = timerConfig.progress(for: newIndex)
         guard abs(progress - currentProgress) >= 0.01 else { return }
+        
         
         withAnimation {
             currentProgress = progress
@@ -116,6 +80,16 @@ class TopicsViewModel {
 }
 
 private extension TopicsViewModel {
+    var isAtLastStoryInLastTopic: Bool {
+        guard let currentTopic = currentTopic else { return false }
+        guard let currentTopicIndex = topics.firstIndex(where: { $0.id == currentTopic.id }) else { return false }
+        
+        let atLastStory = currentStoryIndex >= currentTopic.stories.count
+        let isLastTopic = currentTopicIndex >= (topics.count - 1)
+        
+        return atLastStory && isLastTopic
+    }
+    
     func getNextTopic() -> Topic? {
         guard let currentTopic = currentTopic else { return nil }
         guard let currentIndex = topics.firstIndex(where: { $0.id == currentTopic.id }) else { return nil }
@@ -150,10 +124,42 @@ private extension TopicsViewModel {
         stopTimer()
         
         if let next = getNextTopic() {
-            startViewingTopic(next)
+                startViewingTopic(next)
             startTimer()
         } else {
             shouldDismiss = true
+        }
+    }
+    
+    func handleStoryIndexChange(oldValue: Int, newValue: Int) {
+        guard let config = timerConfiguration else { return }
+        
+        if newValue > oldValue {
+            if newValue == config.storiesCount - 1 {
+                markCurrentTopicAsViewed()
+            }
+            
+            if newValue >= config.storiesCount {
+                if isAtLastStoryInLastTopic {
+                    stopTimer()
+                    shouldDismiss = true
+                    skipProgressUpdate = true
+                } else {
+                    toNextTopic()
+                }
+            }
+        }
+    }
+    
+    func markCurrentTopicAsViewed() {
+        guard let currentTopic = currentTopic else { return }
+        
+        topics = topics.map { topic in
+            if topic.id == currentTopic.id {
+                return topic.markAsViewed()
+            } else {
+                return topic
+            }
         }
     }
 }

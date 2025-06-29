@@ -13,11 +13,16 @@ struct StoriesTabView: View {
     
     var body: some View {
         TabView(selection: $currentStoryIndex) {
-            ForEach(stories.indices, id: \.self) { index in
-                StoryView(story: stories[index])
-                    .onTapGesture {
-                        didTapStory()
-                    }
+            ForEach(0..<stories.count + 1, id: \.self) { index in
+                if index < stories.count {
+                    StoryView(story: stories[index])
+                        .onTapGesture {
+                            didTapStory()
+                        }
+                } else {
+                    Color.black
+                        .ignoresSafeArea()
+                }
             }
         }
         .ignoresSafeArea()
