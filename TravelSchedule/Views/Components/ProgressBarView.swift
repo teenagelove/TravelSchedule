@@ -1,5 +1,5 @@
 //
-//  ProgressBar.swift
+//  ProgressBarView.swift
 //  TravelSchedule
 //
 //  Created by Danil Kazakov on 28.06.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProgressBar: View {
+struct ProgressBarView: View {
     let numberOfSections: Int
     let progress: CGFloat
 
@@ -65,7 +65,7 @@ private struct MaskFragmentView: View {
         .resizable()
         .ignoresSafeArea()
         .overlay(
-            ProgressBar(numberOfSections: 2, progress: 0.5)
+            ProgressBarView(numberOfSections: 2, progress: 0.5)
                 .padding()
         )
 }

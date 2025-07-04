@@ -12,7 +12,7 @@ struct StoriesProgressBar: View {
     @Bindable var viewModel: TopicsViewModel
     
     var body: some View {
-        ProgressBar(
+        ProgressBarView(
             numberOfSections: viewModel.timerConfiguration?.storiesCount ?? 1,
             progress: viewModel.currentProgress
         )
