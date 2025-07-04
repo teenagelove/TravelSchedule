@@ -18,4 +18,5 @@ extension String {
     static let fillCircle = "largecircle.fill.circle"
     static let checkmarkFill = "checkmark.square.fill"
     static let square = "square"
+    static let xmark = "xmark.circle.fill"
 }
