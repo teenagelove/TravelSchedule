@@ -1,5 +1,13 @@
+//
+//  SettingsViewModel.swift
+//  TravelSchedule
+//
+//  Created by Danil Kazakov on 13.07.2025.
+//
+
 import SwiftUI
 
+@MainActor
 @Observable
 final class SettingsViewModel {
 

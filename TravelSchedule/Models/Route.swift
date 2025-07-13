@@ -7,12 +7,13 @@
 
 import Foundation
 
-struct Route: Hashable, Identifiable {
+struct Route: Hashable, Identifiable, Sendable {
     let id = UUID()
+    let code: Int
     let carrier: Carrier
     let date: String
     let startingTime: String
     let arrivalTime: String
-    let travelTime: String
-    let transfer: String?
+    let travelTime: Int
+    let transfer: Bool
 }

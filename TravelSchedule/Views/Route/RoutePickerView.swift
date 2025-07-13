@@ -9,8 +9,10 @@ import SwiftUI
 
 struct RoutePickerView: View {
     @State var viewModel = RouteViewModel()
-    var originName: String
-    var destinationName: String
+    let originName: String
+    let destinationName: String
+    let fromCode: String
+    let toCode: String
 
     var body: some View {
         NavigationStack {
@@ -38,25 +40,23 @@ struct RoutePickerView: View {
                     }
                     .scrollIndicators(.hidden)
 
-                    NavigationLink(
-                        destination: {
-                            FilterView(viewModel: $viewModel)
-                        },
-                        label: {
-                            BlueLabel(
-                                text: "Уточнить время",
-                                isFilterApplied: viewModel.isFilterApplied
-                            )
-                        }
-                    )
+                    if !viewModel.isLoading && !viewModel.isServerError {
+                        NavigationLink(
+                            destination: {
+                                FilterView(viewModel: $viewModel)
+                            },
+                            label: {
+                                BlueLabel(
+                                    text: "Уточнить время",
+                                    isFilterApplied: viewModel.isFilterApplied
+                                )
+                            }
+                        )
+                    }
                 }
             }
             .overlay {
-                if viewModel.routes.isEmpty {
-                    Text("Вариантов нет")
-                        .font(.bold24)
-                        .foregroundStyle(.primary)
-                }
+                overlay
             }
             .padding(.horizontal)
             .padding(.top)
@@ -66,12 +66,33 @@ struct RoutePickerView: View {
                 }
             }
         }
+        .task {
+            await viewModel.loadRoutes(from: fromCode, to: toCode)
+        }
+    }
+    
+    @ViewBuilder
+    private var overlay: some View {
+        if viewModel.routes.isEmpty && !viewModel.isLoading && !viewModel.isServerError {
+            Text("Вариантов нет")
+                .font(.bold24)
+                .foregroundStyle(.primary)
+        } else if viewModel.isLoading {
+            ProgressView()
+                .progressViewStyle(.circular)
+                .padding()
+                .tint(.primary)
+        } else if viewModel.isServerError {
+            ServerErrorView()
+        }
     }
 }
 
 #Preview {
     RoutePickerView(
         originName: "Москва (Ярославский вокзал)",
-        destinationName: "Санкт-Петербург (Балтийский вокзал)"
+        destinationName: "Санкт-Петербург (Балтийский вокзал)",
+        fromCode: "s2000007",
+        toCode: "s9602494"
     )
 }

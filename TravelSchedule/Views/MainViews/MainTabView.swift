@@ -9,7 +9,8 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var settingsViewModel = SettingsViewModel()
-    
+    @State private var networkClient = NetworkClient()
+
     var body: some View {
         TabView {
             TripSelectorView()
@@ -27,6 +28,9 @@ struct MainTabView: View {
                 .padding(.bottom, 60)
         }
         .preferredColorScheme(settingsViewModel.preferredColorScheme)
+        .task {
+            
+        }
     }
 }
 

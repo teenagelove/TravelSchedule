@@ -32,22 +32,4 @@ final class ScheduleByStationService: ScheduleByStationServiceProtocol {
         
         return try response.ok.body.json
     }
-    
-    static func testGetScheduleByStation(client: Client, apiKey: String) {
-        let service = ScheduleByStationService(client: client, apiKey: apiKey)
-        
-        Task {
-            do {
-                print("Fetching schedule by station...")
-                let stationCode = "s9600213" // Example station code
-                let schedule = try await service.getScheduleByStation(
-                    stationCode: stationCode,
-                    transportType: "suburban" // Example transport type
-                )
-                print("Successfully fetched schedule by station: \(schedule)")
-            } catch {
-                print("Error fetching schedule by station: \(error.localizedDescription)")
-            }
-        }
-    }
 }

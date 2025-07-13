@@ -75,15 +75,7 @@ struct LocationPickerView: View {
             isSearchPresented = false
         }
         .overlay {
-            if isListEmpty && !searchText.isEmpty {
-                VStack {
-                    Spacer()
-                    Text(stubText)
-                        .font(.title.bold())
-                        .foregroundColor(.primary)
-                    Spacer()
-                }
-            }
+            overlay
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
@@ -92,6 +84,28 @@ struct LocationPickerView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton()
             }
+        }
+    }
+
+    @ViewBuilder
+    private var overlay: some View {
+        if isListEmpty && !searchText.isEmpty && !viewModel.isLoading
+            && !viewModel.isServerError
+        {
+            VStack {
+                Spacer()
+                Text(stubText)
+                    .font(.title.bold())
+                    .foregroundColor(.primary)
+                Spacer()
+            }
+        } else if viewModel.isLoading {
+            ProgressView()
+                .progressViewStyle(.circular)
+                .padding()
+                .tint(.primary)
+        } else if viewModel.isServerError {
+            ServerErrorView()
         }
     }
 }

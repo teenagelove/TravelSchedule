@@ -106,10 +106,15 @@ struct TripSelectorView: View {
             RoutePickerView(
                 originName: viewModel.originName,
                 destinationName: viewModel.destinationName,
+                fromCode: viewModel.selectedOrigin?.code ?? "",
+                toCode: viewModel.selectedDestination?.code ?? ""
             )
         }
         .fullScreenCover(item: $selectedTopic) { _ in
             StoriesRootView(viewModel: topicsViewModel)
+        }
+        .task {
+            await viewModel.loadStations()
         }
     }
 }
