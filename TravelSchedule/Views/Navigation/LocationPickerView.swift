@@ -86,26 +86,22 @@ struct LocationPickerView: View {
             }
         }
     }
-
-    @ViewBuilder
+    
     private var overlay: some View {
-        if isListEmpty && !searchText.isEmpty && !viewModel.isLoading
-            && !viewModel.isServerError
-        {
-            VStack {
-                Spacer()
-                Text(stubText)
-                    .font(.title.bold())
-                    .foregroundColor(.primary)
-                Spacer()
+        OverlayStatusView(
+            isLoading: viewModel.isLoading,
+            isNetworkError: viewModel.isNetworkError,
+            isServerError: viewModel.isServerError
+        ) {
+            if isListEmpty && !searchText.isEmpty {
+                VStack {
+                    Spacer()
+                    Text(stubText)
+                        .font(.title.bold())
+                        .foregroundColor(.primary)
+                    Spacer()
+                }
             }
-        } else if viewModel.isLoading {
-            ProgressView()
-                .progressViewStyle(.circular)
-                .padding()
-                .tint(.primary)
-        } else if viewModel.isServerError {
-            ServerErrorView()
         }
     }
 }
@@ -117,7 +113,7 @@ struct LocationPickerView: View {
         title: "Выбор локации",
         stubText: "Город не найден",
         cities: [],
-        stations: viewModel.cities[0].stations,
+        stations: CityMock.cities[0].stations,
         path: $path,
         viewModel: $viewModel
     )

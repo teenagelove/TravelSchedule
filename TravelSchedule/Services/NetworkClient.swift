@@ -5,14 +5,17 @@
 //  Created by Danil Kazakov on 13.07.2025.
 //
 
+import Foundation
 import OpenAPIURLSession
 
 enum NetworkError: Error {
     case clientNotInitialized
     case requestInProgress
+    case noInternet
+    case serverError
 }
 
-actor NetworkClient {
+final actor NetworkClient {
     private let client: Client?
     private let key = Constants.apiKey
     
@@ -56,7 +59,11 @@ actor NetworkClient {
         isLoadingStations = true
         defer { isLoadingStations = false }
         
-        return try await allStationsService.getAllStations()
+        do {
+            return try await allStationsService.getAllStations()
+        } catch {
+            throw mapError(error)
+        }
     }
     
     func getScheduleBetweenStations(from: String, to: String, date: String? = nil) async throws -> SearchedRoutes {
@@ -71,6 +78,21 @@ actor NetworkClient {
         isLoadingSchedule = true
         defer { isLoadingSchedule = false }
         
-        return try await scheduleBetweenStationsService.getScheduleBetweenStations(from: from, to: to, date: date)
+        do {
+            return try await scheduleBetweenStationsService.getScheduleBetweenStations(from: from, to: to, date: date)
+        } catch {
+            throw mapError(error)
+        }
+    }
+}
+
+
+private extension NetworkClient {
+    func mapError(_ error: Error) -> NetworkError {
+        if error.localizedDescription.contains(Constants.Errors.noInternetConnection) {
+            return .noInternet
+        }
+        print(error.localizedDescription)
+        return .serverError
     }
 }

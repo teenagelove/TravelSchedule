@@ -15,7 +15,7 @@ protocol AllStationsServiceProtocol {
     func getAllStations() async throws -> AllStations
 }
 
-actor AllStationsService: AllStationsServiceProtocol {
+final actor AllStationsService: AllStationsServiceProtocol {
     private let client: Client
     
     init(client: Client) {

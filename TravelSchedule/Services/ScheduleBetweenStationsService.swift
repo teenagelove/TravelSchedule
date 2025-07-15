@@ -10,12 +10,13 @@ import OpenAPIURLSession
 
 typealias SearchedRoutes = Components.Schemas.SearchedScheduleBetweenStations
 typealias StationInfo = Components.Schemas.StationInfo
+typealias Segment = Components.Schemas.Segment
 
 protocol ScheduleBetweenStationsServiceProtocol {
     func getScheduleBetweenStations(from: String, to: String, date: String?) async throws -> SearchedRoutes
 }
 
-actor ScheduleBetweenStationsService: ScheduleBetweenStationsServiceProtocol {
+final actor ScheduleBetweenStationsService: ScheduleBetweenStationsServiceProtocol {
     private let client: Client
     
     init(client: Client) {

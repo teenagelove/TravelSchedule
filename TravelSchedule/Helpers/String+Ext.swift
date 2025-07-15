@@ -23,7 +23,7 @@ extension String {
 }
 
 extension String {
-    func toDateFormat() -> String {
+    var date: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
@@ -36,7 +36,7 @@ extension String {
         return ""
     }
     
-    func toTimeFormat() -> String {
+    var time: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         
@@ -47,5 +47,11 @@ extension String {
             return outputFormatter.string(from: date)
         }
         return ""
+    }
+    
+    var isoDate: Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: self)
     }
 }

@@ -18,8 +18,6 @@ final class SettingsViewModel {
 
     // MARK: - Screens
     var isUserAgreementPresenting = false
-    var isServerErrorPresenting = false
-    var isNetworkErrorPresenting = false
 
     // MARK: - Initialization
     init() {

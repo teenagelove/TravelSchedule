@@ -22,14 +22,6 @@ struct SettingsView: View {
                     ListRowButton(title: "Пользовательское соглашение") {
                         viewModel.isUserAgreementPresenting = true
                     }
-
-                    ListRowButton(title: "Показать ошибку сервера") {
-                        viewModel.isServerErrorPresenting = true
-                    }
-
-                    ListRowButton(title: "Показать ошибку интернета") {
-                        viewModel.isNetworkErrorPresenting = true
-                    }
                 }
                 .listRowSeparator(.hidden, edges: .all)
                 .foregroundStyle(.primary, .primary)
@@ -46,12 +38,6 @@ struct SettingsView: View {
             .font(.regular12)
         }
         .padding(.vertical)
-        .sheet(isPresented: $viewModel.isServerErrorPresenting) {
-            ServerErrorView()
-        }
-        .sheet(isPresented: $viewModel.isNetworkErrorPresenting) {
-            NetworkErrorView()
-        }
         .fullScreenCover(isPresented: $viewModel.isUserAgreementPresenting) {
             NavigationStack {
                 UserAgreementView()

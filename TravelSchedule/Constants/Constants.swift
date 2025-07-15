@@ -13,9 +13,13 @@ enum Constants {
     static let ruCode = "l225"
     static let hourK = 60 * 60
     
-    enum sizes {
+    enum Sizes {
         static let logoSize: CGFloat = 38
         static let logoRad: CGFloat = 12
         static let imageHeight: CGFloat = 104
+    }
+    
+    enum Errors {
+        static let noInternetConnection = "The Internet connection appears to be offline"
     }
 }

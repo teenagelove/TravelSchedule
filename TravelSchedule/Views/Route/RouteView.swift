@@ -22,6 +22,7 @@ struct RouteView: View {
                             Text(route.carrier.name)
                                 .font(.regular17)
                                 .foregroundStyle(.black)
+                                .multilineTextAlignment(.leading)
 
                             if route.transfer {
                                 Text("С пересадкой")
@@ -32,7 +33,7 @@ struct RouteView: View {
 
                         Spacer()
 
-                        Text(route.date.toDateFormat())
+                        Text(route.date.date)
                             .font(.regular12)
                             .foregroundStyle(.black)
                     }
@@ -40,7 +41,7 @@ struct RouteView: View {
 
                 HStack {
                     HStack {
-                        Text(route.startingTime.toTimeFormat())
+                        Text(route.startingTime.time)
                             .font(.regular17)
                             .foregroundStyle(.black)
                         Rectangle()
@@ -54,7 +55,7 @@ struct RouteView: View {
                         Rectangle()
                             .frame(height: 1)
                             .foregroundColor(.gray)
-                        Text(route.arrivalTime.toTimeFormat())
+                        Text(route.arrivalTime.time)
                             .font(.regular17)
                             .foregroundStyle(.black)
                     }
@@ -71,23 +72,23 @@ struct RouteView: View {
             AsyncImage(url: URL(string: route.carrier.imageName)) { image in
                 Color.white
                     .frame(
-                        width: Constants.sizes.logoSize,
-                        height: Constants.sizes.logoSize
+                        width: Constants.Sizes.logoSize,
+                        height: Constants.Sizes.logoSize
                     )
-                    .clipShape(.rect(cornerRadius: Constants.sizes.logoRad))
+                    .clipShape(.rect(cornerRadius: Constants.Sizes.logoRad))
                     .overlay(
                         image
                             .resizable()
                             .scaledToFit()
                             .clipShape(
-                                .rect(cornerRadius: Constants.sizes.logoRad)
+                                .rect(cornerRadius: Constants.Sizes.logoRad)
                             )
                     )
             } placeholder: {
                 ProgressView()
                     .frame(
-                        width: Constants.sizes.logoSize,
-                        height: Constants.sizes.logoSize
+                        width: Constants.Sizes.logoSize,
+                        height: Constants.Sizes.logoSize
                     )
             }
         } else {
@@ -95,8 +96,8 @@ struct RouteView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(
-                    width: Constants.sizes.logoSize,
-                    height: Constants.sizes.logoSize
+                    width: Constants.Sizes.logoSize,
+                    height: Constants.Sizes.logoSize
                 )
                 .foregroundStyle(.gray)
         }

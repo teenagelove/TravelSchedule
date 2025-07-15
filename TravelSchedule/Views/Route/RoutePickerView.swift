@@ -40,7 +40,9 @@ struct RoutePickerView: View {
                     }
                     .scrollIndicators(.hidden)
 
-                    if !viewModel.isLoading && !viewModel.isServerError {
+                    if !viewModel.isLoading && !viewModel.isServerError
+                        && !viewModel.isNetworkError
+                    {
                         NavigationLink(
                             destination: {
                                 FilterView(viewModel: $viewModel)
@@ -70,20 +72,19 @@ struct RoutePickerView: View {
             await viewModel.loadRoutes(from: fromCode, to: toCode)
         }
     }
-    
+
     @ViewBuilder
     private var overlay: some View {
-        if viewModel.routes.isEmpty && !viewModel.isLoading && !viewModel.isServerError {
-            Text("Вариантов нет")
-                .font(.bold24)
-                .foregroundStyle(.primary)
-        } else if viewModel.isLoading {
-            ProgressView()
-                .progressViewStyle(.circular)
-                .padding()
-                .tint(.primary)
-        } else if viewModel.isServerError {
-            ServerErrorView()
+        OverlayStatusView(
+            isLoading: viewModel.isLoading,
+            isNetworkError: viewModel.isNetworkError,
+            isServerError: viewModel.isServerError
+        ) {
+            if viewModel.routes.isEmpty {
+                Text("Вариантов нет")
+                    .font(.bold24)
+                    .foregroundStyle(.primary)
+            }
         }
     }
 }

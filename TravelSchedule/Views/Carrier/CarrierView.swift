@@ -71,7 +71,7 @@ struct CarrierView: View {
             image
                 .resizable()
                 .scaledToFit()
-                .frame(height: Constants.sizes.imageHeight)
+                .frame(height: Constants.Sizes.imageHeight)
         } placeholder: {
             ProgressView()
         }
