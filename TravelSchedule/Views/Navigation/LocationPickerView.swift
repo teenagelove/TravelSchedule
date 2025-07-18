@@ -88,11 +88,7 @@ struct LocationPickerView: View {
     }
     
     private var overlay: some View {
-        OverlayStatusView(
-            isLoading: viewModel.isLoading,
-            isNetworkError: viewModel.isNetworkError,
-            isServerError: viewModel.isServerError
-        ) {
+        OverlayStatusView(status: viewModel.loadingStatus) {
             if isListEmpty && !searchText.isEmpty {
                 VStack {
                     Spacer()

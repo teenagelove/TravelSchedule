@@ -13,14 +13,11 @@ final class PickerViewModel {
     
     // MARK: - Properties
     var cities: [City] = []
-    //    var stations: [Station] = []
     
     var selectedOrigin: Station? = nil
     var selectedDestination: Station? = nil
     
-    var isNetworkError = false
-    var isServerError = false
-    var isLoading = false
+    var loadingStatus: LoadingStatus = .none
     
     var isOriginSelected: Bool { selectedOrigin != nil }
     
@@ -41,19 +38,16 @@ final class PickerViewModel {
     func loadStations() async {
         guard cities.isEmpty else { return }
         
-        isLoading = true
-        isNetworkError = false
-        isServerError = false
-        
-        defer { isLoading = false }
+        loadingStatus = .loading
+        defer { if loadingStatus == .loading { loadingStatus = .none } }
         
         do {
             let stations = try await networkClient.getAllStations()
             cities = filterCities(from: stations)
         } catch NetworkError.noInternet {
-            isNetworkError = true
+            loadingStatus = .networkError
         } catch {
-            isServerError = true
+            loadingStatus = .serverError
         }
     }
     

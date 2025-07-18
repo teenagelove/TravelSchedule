@@ -15,9 +15,7 @@ final class RouteViewModel {
     var showTransfers: Bool = true
     var isFilterApplied: Bool = false
     
-    var isLoading = false
-    var isNetworkError = false
-    var isServerError = false
+    var loadingStatus: LoadingStatus = .none
     
     private var allRoutes: [Route] = []
     private let networkClient = NetworkClient()
@@ -25,11 +23,8 @@ final class RouteViewModel {
     func loadRoutes(from: String, to: String) async {
         guard routes.isEmpty else { return }
         
-        isLoading = true
-        isNetworkError = false
-        isServerError = false
-        
-        defer { isLoading = false }
+        loadingStatus = .loading
+        defer { if loadingStatus == .loading { loadingStatus = .none } }
         
         do {
             let fetchedRoutes = try await networkClient.getScheduleBetweenStations(
@@ -40,9 +35,9 @@ final class RouteViewModel {
             
             getRoutes(searchedResult: fetchedRoutes)
         } catch NetworkError.noInternet {
-            isNetworkError = true
+            loadingStatus = .networkError
         } catch {
-            isServerError = true
+            loadingStatus = .serverError
         }
     }
     

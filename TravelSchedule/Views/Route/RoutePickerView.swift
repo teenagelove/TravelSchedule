@@ -40,9 +40,7 @@ struct RoutePickerView: View {
                     }
                     .scrollIndicators(.hidden)
 
-                    if !viewModel.isLoading && !viewModel.isServerError
-                        && !viewModel.isNetworkError
-                    {
+                    if viewModel.loadingStatus == .none {
                         NavigationLink(
                             destination: {
                                 FilterView(viewModel: $viewModel)
@@ -75,11 +73,7 @@ struct RoutePickerView: View {
 
     @ViewBuilder
     private var overlay: some View {
-        OverlayStatusView(
-            isLoading: viewModel.isLoading,
-            isNetworkError: viewModel.isNetworkError,
-            isServerError: viewModel.isServerError
-        ) {
+        OverlayStatusView(status: viewModel.loadingStatus) {
             if viewModel.routes.isEmpty {
                 Text("Вариантов нет")
                     .font(.bold24)

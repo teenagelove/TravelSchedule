@@ -8,30 +8,26 @@
 import SwiftUI
 
 struct OverlayStatusView<Content: View>: View {
-    let isLoading: Bool
-    let isNetworkError: Bool
-    let isServerError: Bool
+    let status: LoadingStatus
     @ViewBuilder var content: () -> Content
-
-    private var hasErrorOrLoading: Bool {
-        isLoading || isServerError || isNetworkError
-    }
 
     var body: some View {
         ZStack {
-            if !hasErrorOrLoading {
-                content()
-            }
-
-            if isLoading {
+            switch status {
+            case .loading:
                 ProgressView()
                     .progressViewStyle(.circular)
                     .padding()
                     .tint(.primary)
-            } else if isServerError {
-                ServerErrorView()
-            } else if isNetworkError {
+                
+            case .networkError:
                 NetworkErrorView()
+                
+            case .serverError:
+                ServerErrorView()
+                
+            case .none:
+                content()
             }
         }
     }
@@ -39,9 +35,7 @@ struct OverlayStatusView<Content: View>: View {
 
 #Preview {
     OverlayStatusView(
-        isLoading: true,
-        isNetworkError: false,
-        isServerError: false,
+        status: .serverError,
         content: {
             Text("Content goes here")
                 .font(.title)
