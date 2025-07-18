@@ -15,40 +15,18 @@ protocol AllStationsServiceProtocol {
     func getAllStations() async throws -> AllStations
 }
 
-final class AllStationsService {
+final actor AllStationsService: AllStationsServiceProtocol {
     private let client: Client
-    private let apiKey: String
     
-    init(client: Client, apiKey: String) {
+    init(client: Client) {
         self.client = client
-        self.apiKey = apiKey
     }
     
     func getAllStations() async throws -> AllStations {
-        let response = try await client.getAllStations(query: .init(apikey: apiKey))
-        
+        let response = try await client.getAllStations(query: .init())
         let responseBody = try response.ok.body.html
-        
-        let limit = 50 * 1024 * 1024
-        
-        let fullData = try await Data(collecting: responseBody, upTo: limit)
+        let fullData = try await Data(collecting: responseBody, upTo: Constants.bufferSize)
         
         return try JSONDecoder().decode(AllStations.self, from: fullData)
-    }
-    
-    static func testAllStations(client: Client, apiKey: String) {
-        let service = AllStationsService(client: client, apiKey: apiKey)
-        
-        Task {
-            do {
-                print("Fetching stations...")
-                let allStations = try await service.getAllStations()
-//                Здесь может повиснуть окно дебага
-//                print("Successfully fetched all stations: \(allStations)")
-                print("Successfully fetched all stations!")
-            } catch {
-                print("Error fetching stations: \(error.localizedDescription)")
-            }
-        }
     }
 }

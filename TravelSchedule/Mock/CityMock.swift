@@ -10,75 +10,13 @@ enum CityMock {
         City(
             name: "Москва",
             stations: [
-                Station(name: "Белорусский вокзал"),
-                Station(name: "Киевский вокзал"),
-                Station(name: "Курский вокзал"),
-                Station(name: "Ленинградский вокзал"),
-                Station(name: "Савёловский вокзал"),
-                Station(name: "Ярославский вокзал"),
-                Station(name: "Казанский вокзал")
-            ]
-        ),
-        City(
-            name: "Санкт-Петербург",
-            stations: [
-                Station(name: "Балтийский вокзал"),
-                Station(name: "Ладожский вокзал"),
-                Station(name: "Московский вокзал"),
-                Station(name: "Варшавский вокзал"),
-                Station(name: "Витебский вокзал")
-            ]
-        ),
-        City(
-            name: "Сочи",
-            stations: [
-                Station(name: "Сочи вокзал"),
-                Station(name: "Адлер"),
-                Station(name: "Дагомыс"),
-                Station(name: "Мацеста"),
-                Station(name: "Лоо"),
-                Station(name: "Хоста")
-            ]
-        ),
-        City(
-            name: "Горный воздух",
-            stations: [
-                Station(name: "Городской ж/д вокзал"),
-                Station(name: "Горячий Ключ"),
-                Station(name: "Динская"),
-                Station(name: "Сады"),
-                Station(name: "МЖК")
-            ]
-        ),
-        City(
-            name: "Краснодар",
-            stations: [
-                Station(name: "Краснодар‑1"),
-                Station(name: "Краснодар‑2"),
-                Station(name: "Пашковская"),
-                Station(name: "Краснодар‑Сортировочный"),
-                Station(name: "Динская"),
-                Station(name: "Остановочный пункт 666 км")
-            ]
-        ),
-        City(
-            name: "Казань",
-            stations: [
-                Station(name: "Казань-Пассажирская"),
-                Station(name: "Казань‑1"),
-                Station(name: "Казань‑2"),
-                Station(name: "Суконная Слобода"),
-                Station(name: "Юдино")
-            ]
-        ),
-        City(
-            name: "Омск",
-            stations: [
-                Station(name: "Омск‑Пассажирский"),
-                Station(name: "Комбинатская"),
-                Station(name: "Московка"),
-                Station(name: "Калачинская"),
-                Station(name: "Омск‑2")
+                Station(name: "Белорусский вокзал", code: "MSK001"),
+                Station(name: "Киевский вокзал", code: "MSK002"),
+                Station(name: "Курский вокзал", code: "MSK003"),
+                Station(name: "Ленинградский вокзал", code: "MSK004"),
+                Station(name: "Савёловский вокзал", code: "MSK005"),
+                Station(name: "Ярославский вокзал", code: "MSK006"),
+                Station(name: "Казанский вокзал", code: "MSK007")
             ]
         )
     ]

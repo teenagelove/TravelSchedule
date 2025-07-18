@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 
+@MainActor
 @Observable
 final class TopicsViewModel {
     var topics: [Topic] = Topic.allTopics

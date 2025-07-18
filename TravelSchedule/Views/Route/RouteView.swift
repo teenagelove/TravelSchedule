@@ -15,19 +15,17 @@ struct RouteView: View {
             Color.ypLightGray
             VStack {
                 HStack {
-                    Image(route.carrier.imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 38, height: 38)
+                    imageView
 
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
                             Text(route.carrier.name)
                                 .font(.regular17)
                                 .foregroundStyle(.black)
+                                .multilineTextAlignment(.leading)
 
-                            if let transfer = route.transfer {
-                                Text(transfer)
+                            if route.transfer {
+                                Text("С пересадкой")
                                     .font(.regular12)
                                     .foregroundStyle(.ypRed)
                             }
@@ -35,7 +33,7 @@ struct RouteView: View {
 
                         Spacer()
 
-                        Text(route.date)
+                        Text(route.date.date)
                             .font(.regular12)
                             .foregroundStyle(.black)
                     }
@@ -43,21 +41,21 @@ struct RouteView: View {
 
                 HStack {
                     HStack {
-                        Text(route.startingTime)
+                        Text(route.startingTime.time)
                             .font(.regular17)
                             .foregroundStyle(.black)
                         Rectangle()
                             .frame(height: 1)
                             .foregroundColor(.gray)
                     }
-                    Text(route.travelTime)
+                    Text("\(route.travelTime / Constants.hourK) часов")
                         .font(.regular12)
                         .foregroundStyle(.black)
                     HStack {
                         Rectangle()
                             .frame(height: 1)
                             .foregroundColor(.gray)
-                        Text(route.arrivalTime)
+                        Text(route.arrivalTime.time)
                             .font(.regular17)
                             .foregroundStyle(.black)
                     }
@@ -67,8 +65,45 @@ struct RouteView: View {
         }
         .clipShape(.rect(cornerRadius: 24))
     }
+
+    @ViewBuilder
+    private var imageView: some View {
+        if !route.carrier.imageName.isEmpty {
+            AsyncImage(url: URL(string: route.carrier.imageName)) { image in
+                Color.white
+                    .frame(
+                        width: Constants.Sizes.logoSize,
+                        height: Constants.Sizes.logoSize
+                    )
+                    .clipShape(.rect(cornerRadius: Constants.Sizes.logoRad))
+                    .overlay(
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(
+                                .rect(cornerRadius: Constants.Sizes.logoRad)
+                            )
+                    )
+            } placeholder: {
+                ProgressView()
+                    .frame(
+                        width: Constants.Sizes.logoSize,
+                        height: Constants.Sizes.logoSize
+                    )
+            }
+        } else {
+            Image(systemName: .airplane)
+                .resizable()
+                .scaledToFit()
+                .frame(
+                    width: Constants.Sizes.logoSize,
+                    height: Constants.Sizes.logoSize
+                )
+                .foregroundStyle(.gray)
+        }
+    }
 }
 
 #Preview {
-    RouteView(route: RouteMock.routes[0])
+    RouteView(route: RouteMock.route)
 }

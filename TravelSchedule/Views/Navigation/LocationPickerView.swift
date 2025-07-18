@@ -75,6 +75,20 @@ struct LocationPickerView: View {
             isSearchPresented = false
         }
         .overlay {
+            overlay
+        }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                BackButton()
+            }
+        }
+    }
+    
+    private var overlay: some View {
+        OverlayStatusView(status: viewModel.loadingStatus) {
             if isListEmpty && !searchText.isEmpty {
                 VStack {
                     Spacer()
@@ -83,14 +97,6 @@ struct LocationPickerView: View {
                         .foregroundColor(.primary)
                     Spacer()
                 }
-            }
-        }
-        .navigationTitle(title)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                BackButton()
             }
         }
     }
@@ -103,7 +109,7 @@ struct LocationPickerView: View {
         title: "Выбор локации",
         stubText: "Город не найден",
         cities: [],
-        stations: viewModel.cities[0].stations,
+        stations: CityMock.cities[0].stations,
         path: $path,
         viewModel: $viewModel
     )

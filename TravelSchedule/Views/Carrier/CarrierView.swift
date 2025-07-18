@@ -9,19 +9,16 @@ import SwiftUI
 
 struct CarrierView: View {
     var carrier: Carrier
-    
+
     var body: some View {
         VStack(spacing: 16) {
-            Image(carrier.imageName)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: 104)
-                
+            imageView
+
             VStack(alignment: .leading, spacing: 16) {
                 Text(carrier.fullName)
                     .font(.bold24)
                     .foregroundStyle(.primary)
-                
+
                 VStack(spacing: 16) {
                     HStack {
                         VStack(alignment: .leading) {
@@ -34,28 +31,28 @@ struct CarrierView: View {
                                     .foregroundStyle(.blue)
                             }
                         }
-                        
+
                         Spacer()
                     }
-                    
+
                     HStack {
                         VStack(alignment: .leading) {
                             Text("Телефон")
                                 .font(.regular17)
                                 .foregroundStyle(.primary)
-                            
+
                             if let phone = carrier.phone {
                                 Text(phone)
                                     .font(.regular12)
                                     .foregroundStyle(.blue)
                             }
                         }
-                        
+
                         Spacer()
                     }
                 }
             }
-            
+
             Spacer()
         }
         .padding()
@@ -68,8 +65,19 @@ struct CarrierView: View {
             }
         }
     }
+
+    private var imageView: some View {
+        AsyncImage(url: URL(string: carrier.imageName)) { image in
+            image
+                .resizable()
+                .scaledToFit()
+                .frame(height: Constants.Sizes.imageHeight)
+        } placeholder: {
+            ProgressView()
+        }
+    }
 }
 
 #Preview {
-    CarrierView(carrier: CarrierMock.carriers[0])
+    CarrierView(carrier: CarrierMock.carrier)
 }

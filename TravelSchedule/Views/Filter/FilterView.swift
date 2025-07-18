@@ -21,7 +21,7 @@ struct FilterView: View {
                 VStack(spacing: 16) {
                     ForEach(TimeSlot.allCases, id: \.self) { timeSlot in
                         TimeSlotRow(
-                            title: timeSlot.rawValue,
+                            title: timeSlot.description,
                             isSelected: viewModel.selectedTimeSlots.contains(timeSlot)
                         ) {
                             viewModel.toggleTimeSlot(timeSlot)

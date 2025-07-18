@@ -7,18 +7,38 @@
 
 import SwiftUI
 
+@MainActor
 @Observable
 final class RouteViewModel {
-    private let allRoutes: [Route] = RouteMock.routes
-    
     var routes: [Route] = []
-    
     var selectedTimeSlots: Set<TimeSlot> = []
     var showTransfers: Bool = true
     var isFilterApplied: Bool = false
     
-    init() {
-        routes = allRoutes
+    var loadingStatus: LoadingStatus = .none
+    
+    private var allRoutes: [Route] = []
+    private let networkClient = NetworkClient()
+    
+    func loadRoutes(from: String, to: String) async {
+        guard routes.isEmpty else { return }
+        
+        loadingStatus = .loading
+        defer { if loadingStatus == .loading { loadingStatus = .none } }
+        
+        do {
+            let fetchedRoutes = try await networkClient.getScheduleBetweenStations(
+                from: from,
+                to: to,
+                date: Date().toString()
+            )
+            
+            getRoutes(searchedResult: fetchedRoutes)
+        } catch NetworkError.noInternet {
+            loadingStatus = .networkError
+        } catch {
+            loadingStatus = .serverError
+        }
     }
     
     // MARK: - Filter Methods
@@ -42,21 +62,21 @@ final class RouteViewModel {
 
 // MARK: - Private Methods
 private extension RouteViewModel {
+    func getRoutes(searchedResult: SearchedRoutes) {
+        let newRoutes = (searchedResult.segments ?? []).compactMap { Route(segment: $0) }
+        allRoutes = newRoutes
+        routes = filterRoutes(newRoutes)
+    }
+    
     func filterRoutes(_ routes: [Route]) -> [Route] {
         return routes.filter { route in
-            let timeMatches =
-            selectedTimeSlots.isEmpty
-            || selectedTimeSlots.contains { timeSlot in
-                timeSlot.contains(time: route.startingTime)
+            guard let date = route.startingTime.isoDate else { return false }
+            
+            let timeMatches = selectedTimeSlots.isEmpty || selectedTimeSlots.contains { timeSlot in
+                timeSlot.contains(date: date)
             }
             
-            let transferMatches: Bool
-            
-            if showTransfers {
-                transferMatches = true
-            } else {
-                transferMatches = route.transfer == nil
-            }
+            let transferMatches = showTransfers || !route.transfer
             
             return timeMatches && transferMatches
         }

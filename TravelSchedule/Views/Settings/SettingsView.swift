@@ -8,38 +8,19 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Binding var isDarkMode: Bool?
-    
+    @Bindable var viewModel: SettingsViewModel
     @Environment(\.colorScheme) private var systemScheme
-    @State private var isUserAgreementPresenting = false
-    @State private var isServerErrorPresenting = false
-    @State private var isNetworkErrorPresenting = false
-    
-    private var toggleState: Binding<Bool> {
-        Binding(
-            get: { isDarkMode ?? (systemScheme == .dark) },
-            set: { isDarkMode = $0 }
-        )
-    }
 
     var body: some View {
         VStack {
             List {
                 Group {
-                    Toggle("Темная тема", isOn: toggleState)
+                    Toggle("Темная тема", isOn: viewModel.toggleBinding(systemScheme: systemScheme))
                         .tint(.blue)
                         .listRowSeparator(.hidden, edges: .top)
 
                     ListRowButton(title: "Пользовательское соглашение") {
-                        isUserAgreementPresenting.toggle()
-                    }
-
-                    ListRowButton(title: "Показать ошибку сервера") {
-                        isServerErrorPresenting.toggle()
-                    }
-
-                    ListRowButton(title: "Показать ошибку интернета") {
-                        isNetworkErrorPresenting.toggle()
+                        viewModel.isUserAgreementPresenting = true
                     }
                 }
                 .listRowSeparator(.hidden, edges: .all)
@@ -57,24 +38,16 @@ struct SettingsView: View {
             .font(.regular12)
         }
         .padding(.vertical)
-        .sheet(isPresented: $isServerErrorPresenting) {
-            ServerErrorView()
-        }
-        .sheet(isPresented: $isNetworkErrorPresenting) {
-            NetworkErrorView()
-        }
-        .fullScreenCover(isPresented: $isUserAgreementPresenting) {
+        .fullScreenCover(isPresented: $viewModel.isUserAgreementPresenting) {
             NavigationStack {
                 UserAgreementView()
                     .navigationTitle("Пользовательское соглашение")
                     .navigationBarTitleDisplayMode(.inline)
             }
         }
-
     }
 }
 
 #Preview {
-    @Previewable @State var isDarkMode: Bool? = false
-    SettingsView(isDarkMode: $isDarkMode)
+    SettingsView(viewModel: SettingsViewModel())
 }

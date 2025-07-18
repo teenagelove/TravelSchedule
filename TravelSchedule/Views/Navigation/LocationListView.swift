@@ -27,9 +27,9 @@ struct LocationListView<Item: Identifiable>: View {
     LocationListView(
         items: [
             Station(
-                name: "Station 1"
+                name: "Station 1", code: "1234"
             ),
-            Station(name: "Station 2")
+            Station(name: "Station 2", code: "123")
         ]
     ) { station in
         station.name

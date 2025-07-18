@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @AppStorage("isDarkMode") private var isDarkMode: Bool?
-    
+    @State private var settingsViewModel = SettingsViewModel()
+    @State private var networkClient = NetworkClient()
+
     var body: some View {
         TabView {
             TripSelectorView()
                 .tabItem {
                     Label("", systemImage: .arrowUp)
                 }
-            SettingsView(isDarkMode: $isDarkMode)
+            SettingsView(viewModel: settingsViewModel)
                 .tabItem {
                     Label("", systemImage: .gearShape)
                 }
@@ -26,10 +27,10 @@ struct MainTabView: View {
             Divider()
                 .padding(.bottom, 60)
         }
-        .preferredColorScheme(
-            isDarkMode == true ? .dark :
-            isDarkMode == false ? .light : nil
-        )
+        .preferredColorScheme(settingsViewModel.preferredColorScheme)
+        .task {
+            
+        }
     }
 }
 
