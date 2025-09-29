@@ -15,6 +15,7 @@
 ![OpenAPIKit](https://img.shields.io/badge/OpenAPIKit-00897B?logo=swift&logoColor=white)
 ![SOLID](https://img.shields.io/badge/SOLID-Principles-FF2D55?logo=abstract&logoColor=white)
 ![MVVM](https://img.shields.io/badge/MVVM-5856D6?logo=swift&logoColor=white)
+![Conventional Commits](https://img.shields.io/badge/Conventional_Commits-FF69B4?logo=git&logoColor=white)
 
 ---
 
