@@ -1,10 +1,5 @@
 # Travel Schedule — Technical Specification
 
-## 🔗 Links
-[Design in Figma](https://www.figma.com/design/cQ97drl0RAec3i7vNh55Ta/Расписание)
-
----
-
 ### 🚀 Tech Stack & Principles
 
 ![iOS](https://img.shields.io/badge/iOS-17%2B-000000?logo=apple&logoColor=white)
@@ -113,14 +108,3 @@ The main goal is to build an **iOS app** that allows users to search and view tr
 ### Design
 - Follow Apple **Human Interface Guidelines**  
 - Intuitive UX  
-
-### Testing
-- **Unit Tests** and **UI Tests** required  
-- Test on real devices with multiple iOS versions  
-
----
-
-## ⏳ Roadmap
-
-- UI Design & Implementation — **6 weeks**  
-- Yandex.Schedule API Integration — **2 weeks**  
